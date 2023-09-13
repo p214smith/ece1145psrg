@@ -38,11 +38,17 @@ import java.util.*;
 */
 public class TestAlphaCiv {
   private Game game;
+  private City city;
+  private Tile tile;
+  private Unit unit;
 
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
     game = new GameImpl();
+    city = new CityImpl();
+    tile = new TileImpl();
+    unit = new UnitImpl();
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -52,14 +58,39 @@ public class TestAlphaCiv {
     // TODO: reenable the assert below to get started...
      assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
+  @Test
   public void redCityAtRightPosition() {
-    assertThat (game, is(notNullValue()));
-    assertThat (game.getCityAt(new Position(1,1)),is(Player.RED));
+    assertThat(city, is(notNullValue()));
+    assertThat(city.getOwner(), is(Player.RED));
   }
+  @Test
+  public void checkTerrainTileLocations() {
+    assertThat (tile, is(notNullValue()));
+    assertThat (tile.getTypeString(new Position(1,0)), is(GameConstants.OCEANS));
+    assertThat (tile.getTypeString(new Position(0,1)), is(GameConstants.HILLS));
+    assertThat (tile.getTypeString(new Position(2,2)), is(GameConstants.MOUNTAINS));
+  }
+  @Test
+  public void checkUnitLocations() {
+    assertThat (unit, is(notNullValue()));
+    assertThat (unit.getTypeString(new Position(2,0)), is(GameConstants.ARCHER));
+    assertThat (unit.getTypeString(new Position(3,2)), is(GameConstants.LEGION));
+    assertThat (unit.getTypeString(new Position(4,3)), is(GameConstants.SETTLER));
+  }
+  @Test
+  public void checkUnitOwner() {
+    assertThat (unit, is(notNullValue()));
+    assertThat (unit.getOwner(new Position(2,0)), is(Player.RED));
+    assertThat (unit.getOwner(new Position(3,2)), is(Player.BLUE));
+    assertThat (unit.getOwner(new Position(4,3)), is(Player.RED));
+  }
+
+
+
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */
   @Test
-  public void shouldDefinetelyBeRemoved() {
+  public void shouldDefinitelyBeRemoved() {
     // Matching null and not null values
     // 'is' require an exact match
     String s = null;
