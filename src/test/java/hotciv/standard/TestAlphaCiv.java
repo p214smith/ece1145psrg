@@ -39,16 +39,18 @@ import java.util.*;
 public class TestAlphaCiv {
   private Game game;
   private City city;
-  private Tile tile;
-  private Unit unit;
+  private TileImpl tileimpl;
+  private UnitImpl unitimpl;
+  private CityImpl cityimpl;
 
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
     game = new GameImpl();
     city = new CityImpl();
-    tile = new TileImpl();
-    unit = new UnitImpl();
+    cityimpl = new CityImpl();
+    tileimpl = new TileImpl();
+    unitimpl = new UnitImpl();
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -62,27 +64,37 @@ public class TestAlphaCiv {
   public void redCityAtRightPosition() {
     assertThat(city, is(notNullValue()));
     assertThat(city.getOwner(), is(Player.RED));
+    assertThat(cityimpl.getOwner(new Position(1, 1)), is(Player.RED));
   }
   @Test
   public void checkTerrainTileLocations() {
-    assertThat (tile, is(notNullValue()));
-    assertThat (tile.getTypeString(new Position(1,0)), is(GameConstants.OCEANS));
-    assertThat (tile.getTypeString(new Position(0,1)), is(GameConstants.HILLS));
-    assertThat (tile.getTypeString(new Position(2,2)), is(GameConstants.MOUNTAINS));
+    assertThat (tileimpl, is(notNullValue()));
+    for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
+      for(int j = 0; j < GameConstants.WORLDSIZE; j++){
+        if(i == 0 && j == 1)
+          assertThat (tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.HILLS));
+        else if(i == 1 && j == 0)
+          assertThat (tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.OCEANS));
+        else if(i == 2 && j == 2)
+          assertThat (tileimpl.getTileTerrain(new Position(i, j)), is(GameConstants.MOUNTAINS));
+        else
+          assertThat(tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.PLAINS));
+      }
+    }
   }
   @Test
   public void checkUnitLocations() {
-    assertThat (unit, is(notNullValue()));
-    assertThat (unit.getTypeString(new Position(2,0)), is(GameConstants.ARCHER));
-    assertThat (unit.getTypeString(new Position(3,2)), is(GameConstants.LEGION));
-    assertThat (unit.getTypeString(new Position(4,3)), is(GameConstants.SETTLER));
+    assertThat (unitimpl, is(notNullValue()));
+    assertThat (unitimpl.getUnitLocation(new Position(2,0)), is(GameConstants.ARCHER));
+    assertThat (unitimpl.getUnitLocation(new Position(3,2)), is(GameConstants.LEGION));
+    assertThat (unitimpl.getUnitLocation(new Position(4,3)), is(GameConstants.SETTLER));
   }
   @Test
   public void checkUnitOwner() {
-    assertThat (unit, is(notNullValue()));
-    assertThat (unit.getOwner(new Position(2,0)), is(Player.RED));
-    assertThat (unit.getOwner(new Position(3,2)), is(Player.BLUE));
-    assertThat (unit.getOwner(new Position(4,3)), is(Player.RED));
+    assertThat (unitimpl, is(notNullValue()));
+    assertThat (unitimpl.getUnitOwner(new Position(2,0)), is(Player.RED));
+    assertThat (unitimpl.getUnitOwner(new Position(3,2)), is(Player.BLUE));
+    assertThat (unitimpl.getUnitOwner(new Position(4,3)), is(Player.RED));
   }
 
 

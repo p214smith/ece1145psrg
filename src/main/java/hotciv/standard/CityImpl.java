@@ -25,4 +25,10 @@ public class CityImpl implements City {
     public String getWorkforceFocus() {
         return null;
     }
+    public Player getOwner(Position p) {
+        Player[][] cityMap = new Player[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
+        cityMap[1][1] = Player.RED;
+
+        return cityMap[p.getRow()][p.getColumn()];
+    }
 }

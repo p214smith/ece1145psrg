@@ -35,8 +35,7 @@ public interface Tile {
   /** return the tile type as a string. The set of
    * valid strings are defined by the graphics
    * engine, as they correspond to named image files.
-   * @param p the position in the world.
    * @return the tile type as string
    */
-  public String getTypeString(Position p);
+  public String getTypeString();
 }

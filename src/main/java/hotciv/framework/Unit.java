@@ -34,23 +34,16 @@ Responsibilities:
 public interface Unit {
 
   /** return the type of the unit
-   * @param p the position in the world.
    * @return unit type as a string, valid values are at
    * least those listed in GameConstants, particular variants
    * may define more strings to be valid.
    */
-  public String getTypeString(Position p);
-
-  /** set the owner of this unit
-   * @param p position of the unit
-   */
-  public void setOwner(Position p);
+  public String getTypeString();
 
   /** return the owner of this unit.
-   * @param p position of the unit
    * @return the player that controls this unit.
    */
-  public Player getOwner(Position p);
+  public Player getOwner();
 
   /** return the move distance left (move count).
    * A move count of N means the unit may travel
