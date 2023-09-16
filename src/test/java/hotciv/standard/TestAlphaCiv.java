@@ -113,6 +113,8 @@ public class TestAlphaCiv {
   public void checkAllCitiesAreInRightPosition(){
     assertThat(game , is(notNullValue()));
     City test_city;
+    test_city = game.getCityAt(new Position(0,0));
+    assertThat(test_city, is(nullValue()));
     test_city = game.getCityAt(new Position(1, 1));
     assertThat(test_city.getOwner(), is(Player.RED));
     test_city = game.getCityAt(new Position(4, 1));
@@ -126,6 +128,80 @@ public class TestAlphaCiv {
     assertThat(i,is(2));
     assertThat(players[0],is(Player.RED));
     assertThat(players[1],is(Player.BLUE));
+  }
+  @Test
+  public void checkCitySizeIsOne(){
+    assertThat(game, is(notNullValue()));
+    City test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getSize(),is(1));
+    test_city = game.getCityAt(new Position(4,1));
+    assertThat(test_city.getSize(),is(1));
+    game.endOfTurn();
+    game.endOfTurn();
+    test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getSize(),is(1));
+    test_city = game.getCityAt(new Position(4,1));
+    assertThat(test_city.getSize(),is(1));
+  }
+  @Test
+  public void addSixProductionAfterEachRound(){
+    assertThat(game, is(notNullValue()));
+    City test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getTreasury(),is(0));
+    test_city = game.getCityAt(new Position(4,1));
+    assertThat(test_city.getTreasury(),is(0));
+    game.endOfTurn();
+    game.endOfTurn();
+    test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getTreasury(),is(6));
+    test_city = game.getCityAt(new Position(4,1));
+    assertThat(test_city.getTreasury(),is(6));
+  }
+  @Test
+  public void RedWinsAt300BC(){
+    assertThat(game, is(notNullValue()));
+    int current_age;
+    for(int i = 0; i < 10;i++){
+      game.endOfTurn();
+      game.endOfTurn();
+      current_age = game.getAge();
+      if (current_age < -3000)
+        assertThat(game.getWinner(), is(nullValue()));
+      else
+        assertThat(game.getWinner(),is(Player.RED));
+    }
+
+  }
+  @Test
+  public void canChangeProductionUnit(){
+    assertThat(game, is(notNullValue()));
+    game.changeProductionInCityAt(new Position(1,1),GameConstants.ARCHER);
+    City test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getProduction(),is(GameConstants.ARCHER));
+    game.changeProductionInCityAt(new Position(1,1),GameConstants.SETTLER);
+    test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getProduction(),is(GameConstants.SETTLER));
+    game.changeProductionInCityAt(new Position(1,1),GameConstants.LEGION);
+    test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getProduction(),is(GameConstants.LEGION));
+    game.changeProductionInCityAt(new Position(1,1),"nonUnit");
+    test_city = game.getCityAt(new Position(1,1));
+    assertThat(test_city.getProduction(),is(GameConstants.LEGION));
+
+
+  }
+  @Test
+  public void playersChangeAfterTurn(){
+    assertThat(game, is(notNullValue()));
+    assertThat(game.getPlayerInTurn(),is(Player.RED));
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(),is(Player.BLUE));
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(),is(Player.RED));
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(),is(Player.BLUE));
+    game.endOfTurn();
+
   }
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */

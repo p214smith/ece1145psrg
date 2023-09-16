@@ -38,4 +38,5 @@ public class CityImpl implements City {
         return null;
     }
     public void add_production() {this.treasury += this.production_level;}
+    public void setProduction_Unit(String s){this.production_Unit = s;}
 }

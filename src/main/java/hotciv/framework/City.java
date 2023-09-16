@@ -63,4 +63,5 @@ public interface City {
   public String getWorkforceFocus();
   public void setCity_Owner(Player p);
   public void add_production();
+  public void setProduction_Unit(String s);
 }
