@@ -3,32 +3,39 @@ package hotciv.standard;
 import hotciv.framework.*;
 
 public class CityImpl implements City {
+
+    public CityImpl(){
+        this.city_Owner = null;
+        this.treasury = 0;
+        this.production_Unit = GameConstants.LEGION;
+        this.production_level = 6;
+    }
+    protected Player city_Owner;
+
+    protected int treasury;
+    protected String production_Unit;
+    protected int production_level;
     @Override
     public Player getOwner() {
-        return Player.RED;
+        return city_Owner;
     }
     public int getSize() {
-        return 0;
+        return 1;
     }
 
     @Override
     public int getTreasury() {
-        return 0;
+        return treasury;
     }
 
     @Override
     public String getProduction() {
-        return null;
+        return production_Unit;
     }
-
+    public void setCity_Owner(Player p){ this.city_Owner = p;}
     @Override
     public String getWorkforceFocus() {
         return null;
     }
-    public Player getOwner(Position p) {
-        Player[][] cityMap = new Player[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
-        cityMap[1][1] = Player.RED;
-
-        return cityMap[p.getRow()][p.getColumn()];
-    }
+    public void add_production() {this.treasury += this.production_level;}
 }

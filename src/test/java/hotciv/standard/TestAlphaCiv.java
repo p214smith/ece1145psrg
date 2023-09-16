@@ -63,8 +63,10 @@ public class TestAlphaCiv {
   @Test
   public void redCityAtRightPosition() {
     assertThat(city, is(notNullValue()));
+    city.setCity_Owner(Player.RED);
     assertThat(city.getOwner(), is(Player.RED));
-    assertThat(cityimpl.getOwner(new Position(1, 1)), is(Player.RED));
+    City test_City = game.getCityAt(new Position(1,1));
+    assertThat(test_City.getOwner(), is(Player.RED));
   }
   @Test
   public void checkTerrainTileLocations() {
@@ -97,8 +99,34 @@ public class TestAlphaCiv {
     assertThat (unitimpl.getUnitOwner(new Position(4,3)), is(Player.RED));
   }
 
-
-
+  @Test
+  public void citiesReturnPopulationOfOne() {
+    assertThat(cityimpl, is(notNullValue()));
+    assertThat(cityimpl.getSize(), is(1));
+  }
+  @Test
+  public void gameStartingAgeis4000BC(){
+    assertThat(game ,is(notNullValue()));
+    assertThat(game.getAge(),is(-4000));
+  }
+  @Test
+  public void checkAllCitiesAreInRightPosition(){
+    assertThat(game , is(notNullValue()));
+    City test_city;
+    test_city = game.getCityAt(new Position(1, 1));
+    assertThat(test_city.getOwner(), is(Player.RED));
+    test_city = game.getCityAt(new Position(4, 1));
+    assertThat(test_city.getOwner(), is(Player.BLUE));
+  }
+  @Test
+  public void checkGamePlayers(){
+    assertThat(game , is(notNullValue()));
+    Player[] players = game.getPlayers();
+    int i = players.length;
+    assertThat(i,is(2));
+    assertThat(players[0],is(Player.RED));
+    assertThat(players[1],is(Player.BLUE));
+  }
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */
   @Test

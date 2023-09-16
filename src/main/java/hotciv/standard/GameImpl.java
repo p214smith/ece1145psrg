@@ -2,6 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import java.util.HashMap;
+
 /** Skeleton implementation of HotCiv.
  
    This source code is from the book 
@@ -30,12 +32,28 @@ import hotciv.framework.*;
 */
 
 public class GameImpl implements Game {
+  public GameImpl(){
+    this.game_age = -4000;
+    this.cities = new CityImpl[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
+    cities[1][1] = new CityImpl();
+    cities[1][1].setCity_Owner(Player.RED);
+    cities[4][1] = new CityImpl();
+    cities[4][1].setCity_Owner(Player.BLUE);
+    this.current_Player = Player.RED;
+    this.players = new Player[2];
+    this.players[0] = Player.RED;
+    this.players[1] = Player.BLUE;
+  }
+  protected int game_age;
+  protected Player[] players;
+  protected Player current_Player;
+  protected City[][] cities;
   public Tile getTileAt( Position p ) { return null; }
   public Unit getUnitAt( Position p ) { return null; }
-  public City getCityAt( Position p ) { return null; }
+  public City getCityAt( Position p ) { return this.cities[p.getRow()][p.getColumn()]; }
   public Player getPlayerInTurn() { return Player.RED; }
-  public Player getWinner() { return null; }
-  public int getAge() { return 0; }
+  public Player getWinner() { return Player.RED; }
+  public int getAge() { return this.game_age; }
   public boolean moveUnit( Position from, Position to ) {
     return false;
   }
@@ -43,4 +61,8 @@ public class GameImpl implements Game {
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
+
+  public Player[] getPlayers() {
+    return players;
+  }
 }
