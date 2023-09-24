@@ -3,17 +3,27 @@ package hotciv.standard;
 import hotciv.framework.*;
 
 public class UnitImpl implements Unit {
+    public UnitImpl(Position p,Player owner,String type){
+        this.owner = owner;
+        this.location = p;
+        this.unitType = type;
+        this.moves_left = 1;
+    }
+    protected Player owner;
+    protected Position location;
+    protected String unitType;
+    protected int moves_left;
     @Override
     public String getTypeString() {
-        return null;
+        return this.unitType;
     }
     @Override
     public Player getOwner() {
-        return null;
+        return this.owner;
     }
     @Override
     public int getMoveCount() {
-        return 0;
+        return this.moves_left;
     }
     @Override
     public int getDefensiveStrength() {
@@ -23,14 +33,12 @@ public class UnitImpl implements Unit {
     public int getAttackingStrength() {
         return 0;
     }
-    public String getUnitLocation(Position p) {
-        String[][] unitMap = new String[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
-        unitMap[2][0] = GameConstants.ARCHER;
-        unitMap[3][2] = GameConstants.LEGION;
-        unitMap[4][3] = GameConstants.SETTLER;
 
-        return unitMap[p.getRow()][p.getColumn()];
+    @Override
+    public Position getUnitPosition() {
+        return this.location;
     }
+
     public Player getUnitOwner(Position p) {
         //Ignores terrain & just considers unit on tile
         Player[][] colorMap = new Player[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];

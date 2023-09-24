@@ -49,8 +49,6 @@ public class TestAlphaCiv {
     game = new GameImpl();
     city = new CityImpl();
     cityimpl = new CityImpl();
-    tileimpl = new TileImpl();
-    unitimpl = new UnitImpl();
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -70,33 +68,39 @@ public class TestAlphaCiv {
   }
   @Test
   public void checkTerrainTileLocations() {
-    assertThat (tileimpl, is(notNullValue()));
+    assertThat (game, is(notNullValue()));
     for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
       for(int j = 0; j < GameConstants.WORLDSIZE; j++){
         if(i == 0 && j == 1)
-          assertThat (tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.HILLS));
+          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.HILLS));
         else if(i == 1 && j == 0)
-          assertThat (tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.OCEANS));
+          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.OCEANS));
         else if(i == 2 && j == 2)
-          assertThat (tileimpl.getTileTerrain(new Position(i, j)), is(GameConstants.MOUNTAINS));
+          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.MOUNTAINS));
         else
-          assertThat(tileimpl.getTileTerrain(new Position(i,j)), is(GameConstants.PLAINS));
+          assertThat(game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.PLAINS));
       }
     }
   }
   @Test
   public void checkUnitLocations() {
-    assertThat (unitimpl, is(notNullValue()));
-    assertThat (unitimpl.getUnitLocation(new Position(2,0)), is(GameConstants.ARCHER));
-    assertThat (unitimpl.getUnitLocation(new Position(3,2)), is(GameConstants.LEGION));
-    assertThat (unitimpl.getUnitLocation(new Position(4,3)), is(GameConstants.SETTLER));
+    assertThat (game, is(notNullValue()));
+    Unit tester = game.getUnitAt(new Position(2,0));
+    assertThat (tester.getTypeString(), is(GameConstants.ARCHER));
+    tester = game.getUnitAt(new Position(3,2));
+    assertThat (tester.getTypeString(), is(GameConstants.LEGION));
+    tester = game.getUnitAt(new Position(4,3));
+    assertThat (tester.getTypeString(), is(GameConstants.SETTLER));
   }
   @Test
   public void checkUnitOwner() {
-    assertThat (unitimpl, is(notNullValue()));
-    assertThat (unitimpl.getUnitOwner(new Position(2,0)), is(Player.RED));
-    assertThat (unitimpl.getUnitOwner(new Position(3,2)), is(Player.BLUE));
-    assertThat (unitimpl.getUnitOwner(new Position(4,3)), is(Player.RED));
+    assertThat (game, is(notNullValue()));
+    Unit tester = game.getUnitAt(new Position(2,0));
+    assertThat (tester.getOwner(), is(Player.RED));
+    tester = game.getUnitAt(new Position(3,2));
+    assertThat (tester.getOwner(), is(Player.BLUE));
+    tester = game.getUnitAt(new Position(4,3));
+    assertThat (tester.getOwner(), is(Player.RED));
   }
 
   @Test
@@ -202,6 +206,10 @@ public class TestAlphaCiv {
     assertThat(game.getPlayerInTurn(),is(Player.BLUE));
     game.endOfTurn();
 
+  }
+  public void unit_cant_move_over_mountain(){
+    assertThat(game, is(notNullValue()));
+    assertFalse(game.moveUnit(new Position(3,2),new Position(2,2)));
   }
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */

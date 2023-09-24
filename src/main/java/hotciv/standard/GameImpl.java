@@ -3,7 +3,7 @@ package hotciv.standard;
 import hotciv.framework.*;
 
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /** Skeleton implementation of HotCiv.
  
@@ -44,22 +44,48 @@ public class GameImpl implements Game {
     this.players = new Player[2];
     this.players[0] = Player.RED;
     this.players[1] = Player.BLUE;
+    this.unitList = new ArrayList<>();
+    this.unitList.add(new UnitImpl(new Position(2,0),Player.RED,GameConstants.ARCHER));
+    this.unitList.add(new UnitImpl(new Position(3,2),Player.BLUE,GameConstants.LEGION));
+    this.unitList.add(new UnitImpl(new Position(4,3),Player.RED,GameConstants.SETTLER));
+    this.tiles = new TileImpl[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
+    for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
+      for(int j = 0; j < GameConstants.WORLDSIZE; j++){
+        if(i == 0 && j == 1)
+          this.tiles[i][j] = new TileImpl(GameConstants.HILLS);
+        else if(i == 1 && j == 0)
+          this.tiles[i][j] = new TileImpl(GameConstants.OCEANS);
+        else if(i == 2 && j == 2)
+          this.tiles[i][j] = new TileImpl(GameConstants.MOUNTAINS);
+        else
+          this.tiles[i][j] = new TileImpl(GameConstants.PLAINS);
+      }
+    }
   }
   protected int game_age;
+  protected Tile[][] tiles;
+  protected List<Unit> unitList;
   protected Player[] players;
   protected Player current_Player;
   protected City[][] cities;
-  public Tile getTileAt( Position p ) { return null; }
-  public Unit getUnitAt( Position p ) { return null; }
+  public Tile getTileAt( Position p ) { return this.tiles[p.getRow()][p.getColumn()]; }
+  public Unit getUnitAt( Position p ) {
+      for (Unit unit : this.unitList) {
+          if (unit.getUnitPosition().hashCode() == p.hashCode()) return unit;
+      }
+      return null;}
   public City getCityAt( Position p ) { return this.cities[p.getRow()][p.getColumn()]; }
   public Player getPlayerInTurn() { return this.current_Player; }
-  public Player getWinner() { if (this.game_age == -3000)
+  public Player getWinner() { if( this.game_age == -3000)
     return Player.RED;
-   else
+  else
     return null;}
   public int getAge() { return this.game_age; }
   public boolean moveUnit( Position from, Position to ) {
-    return false;
+    if (Objects.equals(this.tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.MOUNTAINS))
+        return false;
+    else
+    {return true;}
   }
   public void endOfTurn() {
     if(this.current_Player == Player.RED)
