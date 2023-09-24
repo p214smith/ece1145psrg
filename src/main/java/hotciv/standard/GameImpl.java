@@ -64,10 +64,10 @@ public class GameImpl implements Game {
   }
   protected int game_age;
   protected Tile[][] tiles;
-  protected List<Unit> unitList;
+  protected List<UnitImpl> unitList;
   protected Player[] players;
   protected Player current_Player;
-  protected City[][] cities;
+  protected CityImpl[][] cities;
   public Tile getTileAt( Position p ) { return this.tiles[p.getRow()][p.getColumn()]; }
   public Unit getUnitAt( Position p ) {
       for (Unit unit : this.unitList) {
@@ -84,8 +84,21 @@ public class GameImpl implements Game {
   public boolean moveUnit( Position from, Position to ) {
     if (Objects.equals(this.tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.MOUNTAINS))
         return false;
-    else
-    {return true;}
+    Unit fromTile = null;
+    Unit toTile = null;
+    for (Unit unit : this.unitList) {
+      if (unit.getUnitPosition().hashCode() == from.hashCode()) fromTile = unit;}
+    for (Unit unit1 : this.unitList) {
+      if (unit1.getUnitPosition().hashCode() == from.hashCode()) toTile = unit1;}
+    if (fromTile == null) return false;
+    if (this.current_Player != fromTile.getOwner()) return false;
+    if (toTile == null){
+      if (fromTile.getMoveCount() > 0){
+        fromTile.setLocation(to);
+        fromTile.decrementMove();
+        return true;}
+    }
+    return false;
   }
   public void endOfTurn() {
     if(this.current_Player == Player.RED)

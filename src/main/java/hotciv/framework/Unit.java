@@ -64,4 +64,6 @@ public interface Unit {
    */
   public int getAttackingStrength();
   public Position getUnitPosition();
+  public void setLocation(Position location);
+  public void decrementMove();
 }

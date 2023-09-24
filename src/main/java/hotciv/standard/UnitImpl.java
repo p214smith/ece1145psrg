@@ -39,6 +39,16 @@ public class UnitImpl implements Unit {
         return this.location;
     }
 
+    public void setLocation(Position location) {
+        this.location = location;
+    }
+
+    public void decrementMove(){
+        this.moves_left = this.moves_left - 1;
+    }
+    public void resetMove(){
+        this.moves_left = 1;
+    }
     public Player getUnitOwner(Position p) {
         //Ignores terrain & just considers unit on tile
         Player[][] colorMap = new Player[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];

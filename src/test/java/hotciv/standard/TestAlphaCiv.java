@@ -207,6 +207,7 @@ public class TestAlphaCiv {
     game.endOfTurn();
 
   }
+  @Test
   public void unit_cant_move_over_mountain(){
     assertThat(game, is(notNullValue()));
     assertFalse(game.moveUnit(new Position(3,2),new Position(2,2)));
