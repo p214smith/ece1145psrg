@@ -195,6 +195,13 @@ public class TestAlphaCiv {
 
   }
   @Test
+  public void moveUnit(){
+    assertThat(game, is(notNullValue()));
+    assertThat(game.moveUnit(new Position(2,0),new Position(2,1)),is(true));
+    Unit t = game.getUnitAt(new Position(2,1));
+    assertThat(t.getMoveCount(),is(0));
+  }
+  @Test
   public void playersChangeAfterTurn(){
     assertThat(game, is(notNullValue()));
     assertThat(game.getPlayerInTurn(),is(Player.RED));

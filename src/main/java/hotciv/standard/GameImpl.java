@@ -87,9 +87,12 @@ public class GameImpl implements Game {
     Unit fromTile = null;
     Unit toTile = null;
     for (Unit unit : this.unitList) {
-      if (unit.getUnitPosition().hashCode() == from.hashCode()) fromTile = unit;}
+      if (unit.getUnitPosition().hashCode() == from.hashCode()){
+
+        fromTile = unit;
+      }}
     for (Unit unit1 : this.unitList) {
-      if (unit1.getUnitPosition().hashCode() == from.hashCode()) toTile = unit1;}
+      if (unit1.getUnitPosition().hashCode() == to.hashCode()) toTile = unit1;}
     if (fromTile == null) return false;
     if (this.current_Player != fromTile.getOwner()) return false;
     if (toTile == null){
@@ -98,6 +101,14 @@ public class GameImpl implements Game {
         fromTile.decrementMove();
         return true;}
     }
+    if (toTile.getOwner() != this.current_Player){
+        this.unitList.remove(toTile);
+        fromTile.setLocation(to);
+        fromTile.decrementMove();
+        return true;}
+
+
+
     return false;
   }
   public void endOfTurn() {
@@ -108,6 +119,8 @@ public class GameImpl implements Game {
       this.game_age += 100;
       this.cities[1][1].add_production();
       this.cities[4][1].add_production();
+      if (Objects.equals(this.cities[1][1].getProduction(),GameConstants.LEGION) && this.cities[1][1].getTreasury() >= 10){
+      }
     }
   }
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
