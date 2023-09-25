@@ -61,7 +61,7 @@ public class TestAlphaCiv {
   @Test
   public void redCityAtRightPosition() {
     assertThat(city, is(notNullValue()));
-    city.setCity_Owner(Player.RED);
+    ((CityImpl)city).setCity_Owner(Player.RED);
     assertThat(city.getOwner(), is(Player.RED));
     City test_City = game.getCityAt(new Position(1,1));
     assertThat(test_City.getOwner(), is(Player.RED));
@@ -200,6 +200,12 @@ public class TestAlphaCiv {
     assertThat(game.moveUnit(new Position(2,0),new Position(2,1)),is(true));
     Unit t = game.getUnitAt(new Position(2,1));
     assertThat(t.getMoveCount(),is(0));
+  }
+  @Test
+  public void testAttack(){
+    assertThat(game, is(notNullValue()));
+    assertThat(game.moveUnit(new Position(4,3),new Position(3,2)),is(true));
+    assertThat(game.getUnitAt(new Position(3,2)).getTypeString(),is(GameConstants.SETTLER));
   }
   @Test
   public void playersChangeAfterTurn(){
