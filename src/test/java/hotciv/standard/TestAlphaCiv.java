@@ -61,7 +61,7 @@ public class TestAlphaCiv {
   @Test
   public void redCityAtRightPosition() {
     assertThat(city, is(notNullValue()));
-    city.setCity_Owner(Player.RED);
+    ((CityImpl)city).setCity_Owner(Player.RED);
     assertThat(city.getOwner(), is(Player.RED));
     City test_City = game.getCityAt(new Position(1,1));
     assertThat(test_City.getOwner(), is(Player.RED));

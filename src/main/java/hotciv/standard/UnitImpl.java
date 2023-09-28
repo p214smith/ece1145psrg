@@ -34,7 +34,7 @@ public class UnitImpl implements Unit {
         return 0;
     }
 
-    @Override
+
     public Position getUnitPosition() {
         return this.location;
     }
