@@ -2,7 +2,6 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
-import java.util.HashMap;
 import java.util.*;
 
 /** Skeleton implementation of HotCiv.
@@ -49,19 +48,45 @@ public class GameImpl implements Game {
     this.unitList.add(new UnitImpl(new Position(3,2),Player.BLUE,GameConstants.LEGION));
     this.unitList.add(new UnitImpl(new Position(4,3),Player.RED,GameConstants.SETTLER));
     this.tiles = new TileImpl[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
+    generateWorld();
+  }
+  public void generateWorld() {
+    HashMap<Position, Tile> worldTerrain = new HashMap<Position,Tile>();
+    String[] layout = {
+            "oooppmpppppooooo",
+            "oophhppppfffppoo",
+            "opppppmpppoooppo",
+            "oppmmmppppoopppp",
+            "ooopfppphhppppoo",
+            "opfppfppppphhppo",
+            "ooopppoooooooooo",
+            "opppppoppphppmoo",
+            "opppppopphpppfoo",
+            "pfffppppopffpppp",
+            "ppppppppoooppppp",
+            "oppmmmppppoooooo",
+            "ooppppppffppppoo",
+            "oooopppppppppooo",
+            "ooppphhppooooooo",
+            "ooooopppppppppoo"
+    };
     for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
       for(int j = 0; j < GameConstants.WORLDSIZE; j++){
-        if(i == 0 && j == 1)
-          this.tiles[i][j] = new TileImpl(GameConstants.HILLS);
-        else if(i == 1 && j == 0)
-          this.tiles[i][j] = new TileImpl(GameConstants.OCEANS);
-        else if(i == 2 && j == 2)
-          this.tiles[i][j] = new TileImpl(GameConstants.MOUNTAINS);
-        else
+        char terrainType = layout[i].charAt(j);
+        if (terrainType == 'p')
           this.tiles[i][j] = new TileImpl(GameConstants.PLAINS);
+        if (terrainType == 'o')
+          this.tiles[i][j] = new TileImpl(GameConstants.OCEANS);
+        if (terrainType == 'm')
+          this.tiles[i][j] = new TileImpl(GameConstants.MOUNTAINS);
+        if (terrainType == 'h')
+          this.tiles[i][j] = new TileImpl(GameConstants.HILLS);
+        if (terrainType == 'f')
+          this.tiles[i][j] = new TileImpl(GameConstants.FOREST);
       }
     }
   }
+
   protected int game_age;
   protected Tile[][] tiles;
   protected List<Unit> unitList;
@@ -106,9 +131,6 @@ public class GameImpl implements Game {
       ((UnitImpl)fromTile).setLocation(to);
       ((UnitImpl)fromTile).decrementMove();
         return true;}
-
-
-
     return false;
   }
   public void endOfTurn() {

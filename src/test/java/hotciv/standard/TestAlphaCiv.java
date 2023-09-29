@@ -66,22 +66,31 @@ public class TestAlphaCiv {
     City test_City = game.getCityAt(new Position(1,1));
     assertThat(test_City.getOwner(), is(Player.RED));
   }
-  @Test
-  public void checkTerrainTileLocations() {
-    assertThat (game, is(notNullValue()));
-    for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
-      for(int j = 0; j < GameConstants.WORLDSIZE; j++){
-        if(i == 0 && j == 1)
-          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.HILLS));
-        else if(i == 1 && j == 0)
-          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.OCEANS));
-        else if(i == 2 && j == 2)
-          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.MOUNTAINS));
-        else
-          assertThat(game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.PLAINS));
-      }
-    }
-  }
+//  @Test
+//  public void checkTerrainTileLocations() {
+//    assertThat (game, is(notNullValue()));
+//    for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
+//      for(int j = 0; j < GameConstants.WORLDSIZE; j++){
+//        if(i == 0 && j == 1)
+//          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.HILLS));
+//        else if(i == 1 && j == 0)
+//          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.OCEANS));
+//        else if(i == 2 && j == 2)
+//          assertThat (game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.MOUNTAINS));
+//        else
+//          assertThat(game.getTileAt(new Position(i,j)).getTypeString(), is(GameConstants.PLAINS));
+//      }
+//    }
+//  }
+@Test
+public void checkTerrainTileLocations() {
+  assertThat (game, is(notNullValue()));
+  assertThat (game.getTileAt(new Position(7,10)).getTypeString(), is(GameConstants.HILLS));
+  assertThat (game.getTileAt(new Position(1,11)).getTypeString(), is(GameConstants.FOREST));
+  assertThat (game.getTileAt(new Position(7,13)).getTypeString(), is(GameConstants.MOUNTAINS));
+  assertThat(game.getTileAt(new Position(9,8)).getTypeString(), is(GameConstants.OCEANS));
+  assertThat(game.getTileAt(new Position(13,7)).getTypeString(), is(GameConstants.PLAINS));
+}
   @Test
   public void checkUnitLocations() {
     assertThat (game, is(notNullValue()));
