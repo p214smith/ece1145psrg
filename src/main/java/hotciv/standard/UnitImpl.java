@@ -16,7 +16,7 @@ public class UnitImpl implements Unit {
         }
         else if (Objects.equals(type,GameConstants.ARCHER)){
             this.defense = 3;
-            this.attack = 0;
+            this.attack = 2;
         }
         else{
             this.defense = 2;
