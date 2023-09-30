@@ -2,15 +2,33 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import java.util.Objects;
+
 public class UnitImpl implements Unit {
     public UnitImpl(Position p,Player owner,String type){
         this.owner = owner;
         this.location = p;
         this.unitType = type;
         this.moves_left = 1;
+        if (Objects.equals(type,GameConstants.SETTLER)){
+            this.defense = 3;
+            this.attack = 0;
+        }
+        else if (Objects.equals(type,GameConstants.ARCHER)){
+            this.defense = 3;
+            this.attack = 0;
+        }
+        else{
+            this.defense = 2;
+            this.attack = 4;
+
+        }
     }
     protected Player owner;
     protected Position location;
+    protected int defense;
+    protected int attack;
+
     protected String unitType;
     protected int moves_left;
     @Override
@@ -27,11 +45,11 @@ public class UnitImpl implements Unit {
     }
     @Override
     public int getDefensiveStrength() {
-        return 0;
+        return this.defense;
     }
     @Override
     public int getAttackingStrength() {
-        return 0;
+        return this.attack;
     }
 
 
@@ -47,7 +65,10 @@ public class UnitImpl implements Unit {
         this.moves_left = this.moves_left - 1;
     }
     public void resetMove(){
-        this.moves_left = 1;
+        if(Objects.equals(this.unitType,GameConstants.ARCHER) && this.defense > 3)
+            this.moves_left = 0;
+        else
+            this.moves_left = 1;
     }
     public Player getUnitOwner(Position p) {
         //Ignores terrain & just considers unit on tile
@@ -57,5 +78,8 @@ public class UnitImpl implements Unit {
         colorMap[4][3] = Player.RED;
 
         return colorMap[p.getRow()][p.getColumn()];
+    }
+    public void setDefense(int j){
+        this.defense = j;
     }
 }
