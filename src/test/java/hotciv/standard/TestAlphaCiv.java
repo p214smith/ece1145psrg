@@ -136,7 +136,7 @@ public void checkTerrainTileLocations() {
   @Test
   public void checkGamePlayers(){
     assertThat(game , is(notNullValue()));
-    Player[] players = game.getPlayers();
+    Player[] players = ((GameImpl)game).getPlayers();
     int i = players.length;
     assertThat(i,is(2));
     assertThat(players[0],is(Player.RED));
