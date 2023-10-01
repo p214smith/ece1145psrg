@@ -188,8 +188,8 @@ public class GameImpl implements Game {
       ((CityImpl)this.cities[p.getRow()][p.getColumn()]).setProduction_Unit(unitType);
   }
   public void performUnitActionAt( Position p ) {
-    for(Unit unit : this.unitList){
-      if(p.hashCode() == unit.hashCode()){
+    Unit unit = getUnitAt(p);
+      if(Objects.nonNull(unit)){
         if(Objects.equals(unit.getTypeString(),GameConstants.ARCHER)){
           if(unit.getDefensiveStrength() == 3){
             ((UnitImpl)unit).decrementMove();
@@ -198,7 +198,7 @@ public class GameImpl implements Game {
             ((UnitImpl)unit).setDefense(3);
           }
         }
-        if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
+        else if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
           Position new_City_Position = ((UnitImpl)unit).getUnitPosition();
           this.cities[new_City_Position.getRow()][new_City_Position.getColumn()] = new CityImpl();
           ((CityImpl)this.cities[new_City_Position.getRow()][new_City_Position.getColumn()]).setCity_Owner(unit.getOwner());
@@ -206,7 +206,7 @@ public class GameImpl implements Game {
         }
       }
 
-    }
+
   }
 
   public Player[] getPlayers() {
@@ -240,75 +240,89 @@ public class GameImpl implements Game {
   public Position FindPositionForNewUnit(Position P){
     Position unitLocation = new Position(P.getRow()-1,P.getColumn());
     Position newLocation = new Position(P.getRow()-1,P.getColumn());
+
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
         newLocation = new Position(P.getRow()-1,P.getColumn()+1);
-        break;}}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()-1,P.getColumn()+1);
+        }}
+    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS)){
+
+      newLocation = new Position(P.getRow()-1,P.getColumn()+1);}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
       newLocation = new Position(P.getRow()-1,P.getColumn()+1);
-    if (unitLocation == newLocation)return unitLocation;
+
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow()-1,P.getColumn()+1);
     for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
+      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode())
         newLocation = new Position(P.getRow(),P.getColumn()+1);
-        break;}}
+    }
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
       newLocation = new Position(P.getRow(),P.getColumn()+1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow(),P.getColumn()+1);
-    if (unitLocation == newLocation)return unitLocation;
+    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS)){
+
+      newLocation = new Position(P.getRow(),P.getColumn()+1);}
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow(),P.getColumn()+1);
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
         newLocation = new Position(P.getRow()+1,P.getColumn()+1);
-        break;}}
+        }}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
       newLocation = new Position(P.getRow()+1,P.getColumn()+1);
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
       newLocation = new Position(P.getRow()+1,P.getColumn()+1);
-    if (unitLocation == newLocation)return unitLocation;
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow()+1,P.getColumn()+1);
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
         newLocation = new Position(P.getRow()+1,P.getColumn());
-        break;}}
+        }}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
       newLocation = new Position(P.getRow()+1,P.getColumn());
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
       newLocation = new Position(P.getRow()+1,P.getColumn());
-    if (unitLocation == newLocation)return unitLocation;
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow()+1,P.getColumn());
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
         newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-        break;}}
+        }}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
       newLocation = new Position(P.getRow()+1,P.getColumn()-1);
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
       newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-    if (unitLocation == newLocation)return unitLocation;
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow()+1,P.getColumn()-1);
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
         newLocation = new Position(P.getRow(),P.getColumn()-1);
-        break;}}
+        }}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
       newLocation = new Position(P.getRow(),P.getColumn()-1);
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
       newLocation = new Position(P.getRow(),P.getColumn()-1);
-    if (unitLocation == newLocation)return unitLocation;
+    if (Objects.equals(newLocation,unitLocation))return unitLocation;
     unitLocation = new Position(P.getRow(),P.getColumn()-1);
     for (Unit unit : this.unitList) {
       if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-        break;}}
+        newLocation = new Position(P.getRow()-1,P.getColumn()-1);
+        }}
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()-1);
+      newLocation = new Position(P.getRow()-1,P.getColumn()-1);
     if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-    if (unitLocation == newLocation)return unitLocation;
+      newLocation = new Position(P.getRow()-1,P.getColumn()-1);
+    if (Objects.equals(newLocation,unitLocation)) return unitLocation;
+    unitLocation = new Position(P.getRow()-1,P.getColumn()-1);
+    for (Unit unit : this.unitList) {
+      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
+        newLocation = new Position(P.getRow(),P.getColumn()-1);
+      }}
+    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
+      newLocation = new Position(P.getRow(),P.getColumn()-1);
+    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
+      newLocation = new Position(P.getRow(),P.getColumn()-1);
+    if (Objects.equals(newLocation,unitLocation)) return unitLocation;
     return null;}
   public void ageWorld(){
     if (this.game_age < -100)
