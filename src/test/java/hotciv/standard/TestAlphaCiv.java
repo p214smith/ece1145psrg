@@ -46,7 +46,7 @@ public class TestAlphaCiv {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl();
+    game = new gameImplAlpha();
     city = new CityImpl();
     cityimpl = new CityImpl();
   }
@@ -85,10 +85,9 @@ public class TestAlphaCiv {
 @Test
 public void checkTerrainTileLocations() {
   assertThat (game, is(notNullValue()));
-  assertThat (game.getTileAt(new Position(7,10)).getTypeString(), is(GameConstants.HILLS));
-  assertThat (game.getTileAt(new Position(1,11)).getTypeString(), is(GameConstants.FOREST));
-  assertThat (game.getTileAt(new Position(7,13)).getTypeString(), is(GameConstants.MOUNTAINS));
-  assertThat(game.getTileAt(new Position(9,8)).getTypeString(), is(GameConstants.OCEANS));
+  assertThat (game.getTileAt(new Position(0,1)).getTypeString(), is(GameConstants.HILLS));
+  assertThat (game.getTileAt(new Position(2,2)).getTypeString(), is(GameConstants.MOUNTAINS));
+  assertThat(game.getTileAt(new Position(1,0)).getTypeString(), is(GameConstants.OCEANS));
   assertThat(game.getTileAt(new Position(13,7)).getTypeString(), is(GameConstants.PLAINS));
 }
   @Test
@@ -136,7 +135,7 @@ public void checkTerrainTileLocations() {
   @Test
   public void checkGamePlayers(){
     assertThat(game , is(notNullValue()));
-    Player[] players = ((GameImpl)game).getPlayers();
+    Player[] players = ((gameImplAlpha)game).getPlayers();
     int i = players.length;
     assertThat(i,is(2));
     assertThat(players[0],is(Player.RED));
