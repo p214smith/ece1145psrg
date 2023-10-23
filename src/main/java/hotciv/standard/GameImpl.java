@@ -174,7 +174,7 @@ public class GameImpl implements Game {
         for(int j = 0; j < GameConstants.WORLDSIZE;j++){
           if(Objects.nonNull(this.cities[i][j])){
             ((CityImpl)this.cities[i][j]).add_production();
-            create_New_Unit(new Position(i,j));
+            create_New_Unit(new Position(i,j),this.cities[i][j].getProduction(),((CityImpl)this.cities[i][j]).getUnitCost());
           }
         }
       }
@@ -212,27 +212,13 @@ public class GameImpl implements Game {
   public Player[] getPlayers() {
     return players;
   }
-  public void create_New_Unit(Position p){
+  public void create_New_Unit(Position p,String unitType, int cost){
     if (Objects.nonNull(this.cities[p.getRow()][p.getColumn()])) {
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.LEGION) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 15) {
+      if (this.cities[p.getRow()][p.getColumn()].getTreasury() >= cost) {
         Position newUnitPosition = FindPositionForNewUnit(p);
         if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.LEGION));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(15);
-        }
-      }
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.ARCHER) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 10) {
-        Position newUnitPosition = FindPositionForNewUnit(p);
-        if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.ARCHER));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(10);
-        }
-      }
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.SETTLER) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 30) {
-        Position newUnitPosition = FindPositionForNewUnit(p);
-        if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.SETTLER));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(30);
+          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), unitType));
+          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(cost);
         }
       }
     }

@@ -2,6 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import java.util.Objects;
+
 public class CityImpl implements City {
 
     public CityImpl(){
@@ -40,4 +42,13 @@ public class CityImpl implements City {
     public void add_production() {this.treasury += this.production_level;}
     public void take_treasury(int t){this.treasury -= t;}
     public void setProduction_Unit(String s){this.production_Unit = s;}
+    public int getUnitCost(){
+        if (Objects.equals(this.production_Unit, GameConstants.LEGION))
+            return 15;
+        if (Objects.equals(this.production_Unit, GameConstants.ARCHER))
+            return 10;
+        else
+            return 30;
+
+    }
 }
