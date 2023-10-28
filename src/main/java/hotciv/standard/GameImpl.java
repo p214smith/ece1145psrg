@@ -5,31 +5,31 @@ import hotciv.framework.*;
 import java.util.*;
 
 /** Skeleton implementation of HotCiv.
- 
-   This source code is from the book 
-     "Flexible, Reliable Software:
-       Using Patterns and Agile Development"
-     published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
-     Department of Computer Science
-     Aarhus University
-   
-   Please visit http://www.baerbak.com/ for further information.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
- 
-       http://www.apache.org/licenses/LICENSE-2.0
- 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+ This source code is from the book
+ "Flexible, Reliable Software:
+ Using Patterns and Agile Development"
+ published 2010 by CRC Press.
+ Author:
+ Henrik B Christensen
+ Department of Computer Science
+ Aarhus University
 
-*/
+ Please visit http://www.baerbak.com/ for further information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ */
 
 public class GameImpl implements Game {
   public GameImpl(){
@@ -95,10 +95,10 @@ public class GameImpl implements Game {
   protected City[][] cities;
   public Tile getTileAt( Position p ) { return this.tiles[p.getRow()][p.getColumn()]; }
   public Unit getUnitAt( Position p ) {
-      for (Unit unit : this.unitList) {
-          if (((UnitImpl)unit).getUnitPosition().hashCode() == p.hashCode()) return unit;
-      }
-      return null;}
+    for (Unit unit : this.unitList) {
+      if (((UnitImpl)unit).getUnitPosition().hashCode() == p.hashCode()) return unit;
+    }
+    return null;}
   public City getCityAt( Position p ) { return this.cities[p.getRow()][p.getColumn()]; }
   public Player getPlayerInTurn() { return this.current_Player; }
   public Player getWinner() {
@@ -122,11 +122,11 @@ public class GameImpl implements Game {
   public int getAge() { return this.game_age; }
   public boolean moveUnit( Position from, Position to ) {
     if (Objects.equals(this.tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.MOUNTAINS))
-        return false;
+      return false;
     if (Objects.equals(this.tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.OCEANS))
       return false;
     boolean proper_Move_Distance = Math.abs(from.getColumn() - to.getColumn())<= 1
-                                && Math.abs(from.getRow() - to.getRow()) <= 1;
+            && Math.abs(from.getRow() - to.getRow()) <= 1;
     if(!proper_Move_Distance) return false;
 
     Unit fromTile = null;
@@ -158,10 +158,10 @@ public class GameImpl implements Game {
         return true;}
     }
     if (toTile.getOwner() != this.current_Player){
-        this.unitList.remove(toTile);
+      this.unitList.remove(toTile);
       ((UnitImpl)fromTile).setLocation(to);
       ((UnitImpl)fromTile).decrementMove();
-        return true;}
+      return true;}
     return false;
   }
   public void endOfTurn() {
@@ -174,7 +174,7 @@ public class GameImpl implements Game {
         for(int j = 0; j < GameConstants.WORLDSIZE;j++){
           if(Objects.nonNull(this.cities[i][j])){
             ((CityImpl)this.cities[i][j]).add_production();
-            create_New_Unit(new Position(i,j));
+            create_New_Unit(new Position(i,j),this.cities[i][j].getProduction(),((CityImpl)this.cities[i][j]).getUnitCost());
           }
         }
       }
@@ -189,22 +189,22 @@ public class GameImpl implements Game {
   }
   public void performUnitActionAt( Position p ) {
     Unit unit = getUnitAt(p);
-      if(Objects.nonNull(unit)){
-        if(Objects.equals(unit.getTypeString(),GameConstants.ARCHER)){
-          if(unit.getDefensiveStrength() == 3){
-            ((UnitImpl)unit).decrementMove();
-            ((UnitImpl)unit).setDefense(6);}
-          else{
-            ((UnitImpl)unit).setDefense(3);
-          }
-        }
-        else if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
-          Position new_City_Position = ((UnitImpl)unit).getUnitPosition();
-          this.cities[new_City_Position.getRow()][new_City_Position.getColumn()] = new CityImpl();
-          ((CityImpl)this.cities[new_City_Position.getRow()][new_City_Position.getColumn()]).setCity_Owner(unit.getOwner());
-          this.unitList.remove(unit);
+    if(Objects.nonNull(unit)){
+      if(Objects.equals(unit.getTypeString(),GameConstants.ARCHER)){
+        if(unit.getDefensiveStrength() == 3){
+          ((UnitImpl)unit).decrementMove();
+          ((UnitImpl)unit).setDefense(6);}
+        else{
+          ((UnitImpl)unit).setDefense(3);
         }
       }
+      else if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
+        Position new_City_Position = ((UnitImpl)unit).getUnitPosition();
+        this.cities[new_City_Position.getRow()][new_City_Position.getColumn()] = new CityImpl();
+        ((CityImpl)this.cities[new_City_Position.getRow()][new_City_Position.getColumn()]).setCity_Owner(unit.getOwner());
+        this.unitList.remove(unit);
+      }
+    }
 
 
   }
@@ -212,118 +212,89 @@ public class GameImpl implements Game {
   public Player[] getPlayers() {
     return players;
   }
-  public void create_New_Unit(Position p){
+  public void create_New_Unit(Position p,String unitType, int cost){
     if (Objects.nonNull(this.cities[p.getRow()][p.getColumn()])) {
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.LEGION) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 15) {
+      if (this.cities[p.getRow()][p.getColumn()].getTreasury() >= cost) {
         Position newUnitPosition = FindPositionForNewUnit(p);
         if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.LEGION));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(15);
-        }
-      }
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.ARCHER) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 10) {
-        Position newUnitPosition = FindPositionForNewUnit(p);
-        if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.ARCHER));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(10);
-        }
-      }
-      if (Objects.equals(this.cities[p.getRow()][p.getColumn()].getProduction(), GameConstants.SETTLER) && this.cities[p.getRow()][p.getColumn()].getTreasury() >= 30) {
-        Position newUnitPosition = FindPositionForNewUnit(p);
-        if (Objects.nonNull(newUnitPosition)) {
-          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), GameConstants.SETTLER));
-          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(30);
+          unitList.add(new UnitImpl(newUnitPosition, this.cities[p.getRow()][p.getColumn()].getOwner(), unitType));
+          ((CityImpl) this.cities[p.getRow()][p.getColumn()]).take_treasury(cost);
         }
       }
     }
   }
-  public Position FindPositionForNewUnit(Position P){
-    Position unitLocation = new Position(P.getRow()-1,P.getColumn());
-    Position newLocation = new Position(P.getRow()-1,P.getColumn());
+  public Position FindPositionForNewUnit(Position P) {
+    Position unitLocation = new Position(P.getRow(), P.getColumn());
+    Position newLocation;
 
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()-1,P.getColumn()+1);
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS)){
+    for (int i = 0; i < 8; i++) {
+      newLocation = getNextPosition(unitLocation, i);
 
-      newLocation = new Position(P.getRow()-1,P.getColumn()+1);}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()-1,P.getColumn()+1);
-
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow()-1,P.getColumn()+1);
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode())
-        newLocation = new Position(P.getRow(),P.getColumn()+1);
+      if (isValidLocation(newLocation, unitLocation)) {
+        return newLocation;
+      }
     }
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow(),P.getColumn()+1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS)){
 
-      newLocation = new Position(P.getRow(),P.getColumn()+1);}
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow(),P.getColumn()+1);
+    return null;
+  }
+
+  private Position getNextPosition(Position current, int direction) {
+    int row = current.getRow();
+    int col = current.getColumn();
+
+    switch (direction) {
+      case 0:
+        row--;
+        break;
+      case 1:
+        row--;
+        col++;
+        break;
+      case 2:
+        col++;
+        break;
+      case 3:
+        row++;
+        col++;
+        break;
+      case 4:
+        row++;
+        break;
+      case 5:
+        row++;
+        col--;
+        break;
+      case 6:
+        col--;
+        break;
+      case 7:
+        row--;
+        col--;
+        break;
+    }
+    return new Position(row, col);
+  }
+
+
+  private boolean isValidLocation(Position location, Position unitLocation) {
+    if (isOccupied(location) || isMountainOrOcean(location)) {
+      return false;
+    }
+    return true;
+  }
+
+  public boolean isOccupied(Position unitLocation) {
     for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()+1,P.getColumn()+1);
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()+1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()+1);
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow()+1,P.getColumn()+1);
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()+1,P.getColumn());
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()+1,P.getColumn());
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()+1,P.getColumn());
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow()+1,P.getColumn());
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()+1,P.getColumn()-1);
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow()+1,P.getColumn()-1);
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow(),P.getColumn()-1);
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow(),P.getColumn()-1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow(),P.getColumn()-1);
-    if (Objects.equals(newLocation,unitLocation))return unitLocation;
-    unitLocation = new Position(P.getRow(),P.getColumn()-1);
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow()-1,P.getColumn()-1);
-        }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow()-1,P.getColumn()-1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow()-1,P.getColumn()-1);
-    if (Objects.equals(newLocation,unitLocation)) return unitLocation;
-    unitLocation = new Position(P.getRow()-1,P.getColumn()-1);
-    for (Unit unit : this.unitList) {
-      if (((UnitImpl)unit).getUnitPosition().hashCode() == unitLocation.hashCode()) {
-        newLocation = new Position(P.getRow(),P.getColumn()-1);
-      }}
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.MOUNTAINS))
-      newLocation = new Position(P.getRow(),P.getColumn()-1);
-    if (Objects.equals(this.tiles[unitLocation.getRow()][unitLocation.getColumn()].getTypeString() , GameConstants.OCEANS))
-      newLocation = new Position(P.getRow(),P.getColumn()-1);
-    if (Objects.equals(newLocation,unitLocation)) return unitLocation;
-    return null;}
+      if (((UnitImpl) unit).getUnitPosition().hashCode() == unitLocation.hashCode())
+        return true;
+    }
+    return false;
+  }
+
+  private boolean isMountainOrOcean(Position location) {
+    String tileType = this.tiles[location.getRow()][location.getColumn()].getTypeString();
+    return Objects.equals(tileType, GameConstants.MOUNTAINS) || Objects.equals(tileType, GameConstants.OCEANS);
+  }
   public void ageWorld(){
     if (this.game_age < -100)
       this.game_age = this.game_age + 100;
@@ -340,7 +311,7 @@ public class GameImpl implements Game {
     else if(this.game_age < 1970)
       this.game_age = this.game_age + 5;
     else
-        this.game_age += 1;
+      this.game_age += 1;
 
   }
 }
