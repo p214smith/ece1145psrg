@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(worldStrategy world,winningStrategy win){
+  public GameImpl(worldStrategy world,winningStrategy win,ageStrategy age,actionStrategy action){
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.cities[8][12] = new CityImpl();
@@ -43,6 +43,8 @@ public class GameImpl implements Game {
     this.players = new Player[2];
     this.players[0] = Player.RED;
     this.players[1] = Player.BLUE;
+    this.action = action;
+    this.age = age;
     this.win = win;
     this.world = world;
     this.unitList = new ArrayList<>();
@@ -71,6 +73,8 @@ public class GameImpl implements Game {
       }
     }
   }
+  protected actionStrategy action;
+  protected ageStrategy age;
   protected worldStrategy world;
   protected winningStrategy win;
   protected int game_age;
@@ -160,24 +164,7 @@ public class GameImpl implements Game {
   }
   public void performUnitActionAt( Position p ) {
     Unit unit = getUnitAt(p);
-    if(Objects.nonNull(unit)){
-      if(Objects.equals(unit.getTypeString(),GameConstants.ARCHER)){
-        if(unit.getDefensiveStrength() == 3){
-          ((UnitImpl)unit).decrementMove();
-          ((UnitImpl)unit).setDefense(6);}
-        else{
-          ((UnitImpl)unit).setDefense(3);
-        }
-      }
-      else if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
-        Position new_City_Position = ((UnitImpl)unit).getUnitPosition();
-        this.cities[new_City_Position.getRow()][new_City_Position.getColumn()] = new CityImpl();
-        ((CityImpl)this.cities[new_City_Position.getRow()][new_City_Position.getColumn()]).setCity_Owner(unit.getOwner());
-        this.unitList.remove(unit);
-      }
-    }
-
-
+    this.action.actionStrategy(unit,this.unitList,this.cities);
   }
 
   public Player[] getPlayers() {
@@ -267,22 +254,7 @@ public class GameImpl implements Game {
     return Objects.equals(tileType, GameConstants.MOUNTAINS) || Objects.equals(tileType, GameConstants.OCEANS);
   }
   public void ageWorld(){
-    if (this.game_age < -100)
-      this.game_age = this.game_age + 100;
-    else if (this.game_age == -100)
-      this.game_age = this.game_age + 99;
-    else if(this.game_age == 0 || this.game_age == -1)
-      this.game_age = this.game_age + 1;
-    else if(this.game_age == 1)
-      this.game_age = this.game_age + 49;
-    else if( this.game_age < 1750)
-      this.game_age = this.game_age +50;
-    else if(this.game_age < 1900)
-      this.game_age = this.game_age +25;
-    else if(this.game_age < 1970)
-      this.game_age = this.game_age + 5;
-    else
-      this.game_age += 1;
+    this.game_age = age.ageGame(this.game_age);
 
   }
 }
