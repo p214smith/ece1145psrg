@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(){
+  public GameImpl(worldStrategy world,winningStrategy win){
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.cities[8][12] = new CityImpl();
@@ -43,6 +43,8 @@ public class GameImpl implements Game {
     this.players = new Player[2];
     this.players[0] = Player.RED;
     this.players[1] = Player.BLUE;
+    this.win = win;
+    this.world = world;
     this.unitList = new ArrayList<>();
     this.unitList.add(new UnitImpl(new Position(3,8),Player.RED,GameConstants.ARCHER));
     this.unitList.add(new UnitImpl(new Position(4,4),Player.BLUE,GameConstants.LEGION));
@@ -52,24 +54,7 @@ public class GameImpl implements Game {
   }
   public void generateWorld() {
     HashMap<Position, Tile> worldTerrain = new HashMap<Position,Tile>();
-    String[] layout = {
-            "oooppmpppppooooo",
-            "oophhppppfffppoo",
-            "opppppmpppoooppo",
-            "oppmmmppppoopppp",
-            "ooopfppphhppppoo",
-            "opfppfppppphhppo",
-            "ooopppoooooooooo",
-            "opppppoppphppmoo",
-            "opppppopphpppfoo",
-            "pfffppppopffpppp",
-            "ppppppppoooppppp",
-            "oppmmmppppoooooo",
-            "ooppppppffppppoo",
-            "oooopppppppppooo",
-            "ooppphhppooooooo",
-            "ooooopppppppppoo"
-    };
+    String[] layout = this.world.getWorld();
     for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
       for(int j = 0; j < GameConstants.WORLDSIZE; j++){
         char terrainType = layout[i].charAt(j);
@@ -86,7 +71,8 @@ public class GameImpl implements Game {
       }
     }
   }
-
+  protected worldStrategy world;
+  protected winningStrategy win;
   protected int game_age;
   protected Tile[][] tiles;
   protected List<Unit> unitList;
@@ -102,23 +88,8 @@ public class GameImpl implements Game {
   public City getCityAt( Position p ) { return this.cities[p.getRow()][p.getColumn()]; }
   public Player getPlayerInTurn() { return this.current_Player; }
   public Player getWinner() {
-    int red_cities = 0;
-    int total_cities = 0;
-    for( int i = 0; i < GameConstants.WORLDSIZE;i++){
-      for(int j = 0; j < GameConstants.WORLDSIZE;j++){
-        if ( Objects.nonNull(this.cities[i][j])){
-          total_cities += 1;
-          if(this.cities[i][j].getOwner() == Player.RED)
-            red_cities += 1;
-        }
-      }
-    }
-    if(total_cities == red_cities)
-      return Player.RED;
-    else if (red_cities == 0)
-      return Player.BLUE;
-    else
-      return null;}
+
+      return win.getWinner(this.game_age,this.cities);}
   public int getAge() { return this.game_age; }
   public boolean moveUnit( Position from, Position to ) {
     if (Objects.equals(this.tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.MOUNTAINS))
