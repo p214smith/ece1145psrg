@@ -127,7 +127,12 @@ public class GameImpl implements Game {
         return true;}
     }
     if (toTile.getOwner() != this.current_Player){
-      if(attack.attack(fromTile,toTile,this.tiles,this.unitList,this.cities,7))return true;}
+      if(this.attack.attack(fromTile,toTile,this.tiles,this.unitList,this.cities,7)){
+        if(fromTile.getOwner() == Player.RED)
+          this.win.iterateRedVictory();
+        if(fromTile.getOwner() == Player.BLUE)
+          this.win.iterateBlueVictory();
+        return true;}}
 
 
     return false;
@@ -138,6 +143,7 @@ public class GameImpl implements Game {
     else{
       this.current_Player = Player.RED;
       ageWorld();
+      win.iterateRound();
       for(int i = 0; i < GameConstants.WORLDSIZE;i++){
         for(int j = 0; j < GameConstants.WORLDSIZE;j++){
           if(Objects.nonNull(this.cities[i][j])){

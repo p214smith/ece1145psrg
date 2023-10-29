@@ -23,4 +23,7 @@ public class betaCivWinningStrategy implements winningStrategy{
         else
             return null;
     }
+    public void iterateBlueVictory() {}
+    public void iterateRedVictory() {}
+    public void iterateRound() {}
 }

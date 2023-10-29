@@ -7,4 +7,8 @@ public class AlphaCivWinningStrategy implements winningStrategy{
         else
             return null;
     }
+
+    public void iterateBlueVictory() {}
+    public void iterateRound() {}
+    public void iterateRedVictory() {}
 }
