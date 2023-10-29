@@ -8,9 +8,9 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class testEpsilonAttackStrategy {
     private attackStrategy attack;
-    private City[][] cities;
-    private List<Unit> unitList;
-    private Tile[][] tiles;
+    private City[][] cities;//stub for cities
+    private List<Unit> unitList;//stub for units
+    private Tile[][] tiles;//stub for tiles
     @Before
     public void setUp(){
         cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
