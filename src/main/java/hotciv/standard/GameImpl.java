@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(worldStrategy world,winningStrategy win,ageStrategy age,actionStrategy action){
+  public GameImpl(worldStrategy world,winningStrategy win,ageStrategy age,actionStrategy action,attackStrategy attack){
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.cities[8][12] = new CityImpl();
@@ -43,6 +43,7 @@ public class GameImpl implements Game {
     this.players = new Player[2];
     this.players[0] = Player.RED;
     this.players[1] = Player.BLUE;
+    this.attack = attack;
     this.action = action;
     this.age = age;
     this.win = win;
@@ -73,6 +74,7 @@ public class GameImpl implements Game {
       }
     }
   }
+  protected attackStrategy attack;
   protected actionStrategy action;
   protected ageStrategy age;
   protected worldStrategy world;
@@ -115,28 +117,19 @@ public class GameImpl implements Game {
       if (((UnitImpl)unit1).getUnitPosition().hashCode() == to.hashCode()) toTile = unit1;}
     if (fromTile == null) return false;
     if (this.current_Player != fromTile.getOwner()) return false;
-    if( Objects.nonNull(this.cities[to.getRow()][to.getColumn()])
-            && this.cities[to.getRow()][to.getColumn()].getOwner() != fromTile.getOwner()){
-      ((CityImpl)this.cities[to.getRow()][to.getColumn()]).setCity_Owner(fromTile.getOwner());
-      ((UnitImpl)fromTile).decrementMove();
-      return true;
-
-    }
-    if( Objects.nonNull(this.cities[to.getRow()][to.getColumn()])
-            && this.cities[to.getRow()][to.getColumn()].getOwner() == fromTile.getOwner()){
-      return false;
-    }
     if (toTile == null){
       if (fromTile.getMoveCount() > 0){
         ((UnitImpl)fromTile).setLocation(to);
+        if( Objects.nonNull(this.cities[to.getRow()][to.getColumn()])
+                && this.cities[to.getRow()][to.getColumn()].getOwner() != fromTile.getOwner()){
+          ((CityImpl)this.cities[to.getRow()][to.getColumn()]).setCity_Owner(fromTile.getOwner());}
         ((UnitImpl)fromTile).decrementMove();
         return true;}
     }
     if (toTile.getOwner() != this.current_Player){
-      this.unitList.remove(toTile);
-      ((UnitImpl)fromTile).setLocation(to);
-      ((UnitImpl)fromTile).decrementMove();
-      return true;}
+      if(attack.attack(fromTile,toTile,this.tiles,this.unitList,this.cities,7))return true;}
+
+
     return false;
   }
   public void endOfTurn() {

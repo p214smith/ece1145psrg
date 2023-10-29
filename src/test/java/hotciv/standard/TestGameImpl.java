@@ -12,7 +12,7 @@ public class TestGameImpl {
     private Game game;
     @Before
     public void setUp() {
-        game = new GameImpl(new deltaCivWorldImpl(),new betaCivWinningStrategy(),new betaCivAgeStrategy(),new gammaCivActionStrategy());
+        game = new GameImpl(new deltaCivWorldImpl(),new betaCivWinningStrategy(),new betaCivAgeStrategy(),new gammaCivActionStrategy(),new alphaCivAttackStrategy());
     }
 
     @Test
@@ -116,10 +116,11 @@ public class TestGameImpl {
         assertThat(game.getUnitAt(new Position(5,4)).getMoveCount(),is(0));
         game.endOfTurn();
         assertFalse(game.moveUnit(new Position(4,4),new Position(3,4)));
-        assertFalse(game.moveUnit(new Position(4,4),new Position(4,5)));
-        assertTrue(game.moveUnit(new Position(4,4),new Position(4,3)));
-        assertThat(game.getUnitAt(new Position(4,3)).getMoveCount(),is(0));
+        assertTrue(game.moveUnit(new Position(4,4),new Position(4,5)));
+
+        assertThat(game.getUnitAt(new Position(4,5)).getMoveCount(),is(0));
         game.endOfTurn();
+        assertFalse(game.moveUnit(new Position(4,5),new Position(4,4)));
         assertFalse(game.moveUnit(new Position(3,9),new Position(3,10)));
         assertFalse(game.moveUnit(new Position(3,9),new Position(1,9)));
         assertTrue(game.moveUnit(new Position(3,9),new Position(3,8)));
@@ -127,14 +128,15 @@ public class TestGameImpl {
         assertTrue(game.moveUnit(new Position(5,4),new Position(4,3)));
         assertThat(game.getUnitAt(new Position(4,3)).getMoveCount(),is(0));
         assertThat(game.getUnitAt(new Position(4,3)).getTypeString(),is(GameConstants.SETTLER));
-
+        game.endOfTurn();
+        assertTrue(game.moveUnit(new Position(4,5),new Position(4,4)));
     }
     @Test
     public void test_winning_condition(){
         assertThat (game, is(notNullValue()));
         assertThat(game.getWinner(),is(nullValue()));
         assertTrue(game.moveUnit(new Position(5,5),new Position(4,5)));
-        assertThat(game.getUnitAt(new Position(5,5)).getMoveCount(),is(0));
+        assertThat(game.getUnitAt(new Position(4,5)).getMoveCount(),is(0));
         assertThat(game.getCityAt(new Position(4,5)).getOwner(),is(Player.RED));
         game.endOfTurn();
         assertThat(game.getWinner(),is(Player.RED));
