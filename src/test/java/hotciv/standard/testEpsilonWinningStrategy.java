@@ -8,7 +8,7 @@ public class testEpsilonWinningStrategy {
     private Game game;
     @Before
     public void setUp() {
-        game = new GameImpl(new deltaCivWorldImpl(),new epsilonCivWinningStrategy(),new alphaCivAgeStrategy(),new gammaCivActionStrategy(),new alphaCivAttackStrategy());
+        game = new GameImpl(new testFactoryEpsilon());
 
     }
     @Test

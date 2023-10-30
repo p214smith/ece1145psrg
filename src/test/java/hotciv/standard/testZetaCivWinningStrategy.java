@@ -8,7 +8,7 @@ public class testZetaCivWinningStrategy {
     private Game game;
     @Before
     public void setUp() {
-        game = new GameImpl(new deltaCivWorldImpl(),new zetaCivWinningStrategy(),new alphaCivAgeStrategy(),new gammaCivActionStrategy(),new alphaCivAttackStrategy());
+        game = new GameImpl(new testFactoryZeta());
 
     }
     @Test

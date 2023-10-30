@@ -12,7 +12,7 @@ public class TestGameImpl {
     private Game game;
     @Before
     public void setUp() {
-        game = new GameImpl(new deltaCivWorldImpl(),new betaCivWinningStrategy(),new betaCivAgeStrategy(),new gammaCivActionStrategy(),new alphaCivAttackStrategy());
+        game = new GameImpl(new testFactory());
     }
 
     @Test

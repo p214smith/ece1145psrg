@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(worldStrategy world,winningStrategy win,ageStrategy age,actionStrategy action,attackStrategy attack){
+  public GameImpl(Factory gameFactory){
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.cities[8][12] = new CityImpl();
@@ -43,11 +43,11 @@ public class GameImpl implements Game {
     this.players = new Player[2];
     this.players[0] = Player.RED;
     this.players[1] = Player.BLUE;
-    this.attack = attack;
-    this.action = action;
-    this.age = age;
-    this.win = win;
-    this.world = world;
+    this.attack = gameFactory.getAttackStrategy();
+    this.action = gameFactory.getActionStrategy();
+    this.age = gameFactory.getAgeStrategy();
+    this.win = gameFactory.getWinningStrategy();
+    this.world = gameFactory.getWorldStrategy();
     this.unitList = new ArrayList<>();
     this.unitList.add(new UnitImpl(new Position(3,8),Player.RED,GameConstants.ARCHER));
     this.unitList.add(new UnitImpl(new Position(4,4),Player.BLUE,GameConstants.LEGION));
