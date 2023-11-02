@@ -27,4 +27,6 @@ public class alphaFactory implements Factory {
     public worldStrategy getWorldStrategy() {
         return new alphaCivWorldImpl();
     }
+
+    public workforcePopStrategy getWorkforceStrategy() { return new alphaCivWorkStrategy(); }
 }

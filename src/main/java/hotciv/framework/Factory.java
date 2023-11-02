@@ -6,4 +6,5 @@ public interface Factory {
     public attackStrategy getAttackStrategy();
     public winningStrategy getWinningStrategy();
     public worldStrategy getWorldStrategy();
+    public workforcePopStrategy getWorkforceStrategy();
 }

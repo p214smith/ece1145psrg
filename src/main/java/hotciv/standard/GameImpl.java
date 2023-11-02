@@ -48,6 +48,7 @@ public class GameImpl implements Game {
     this.age = gameFactory.getAgeStrategy();
     this.win = gameFactory.getWinningStrategy();
     this.world = gameFactory.getWorldStrategy();
+    this.work = gameFactory.getWorkforceStrategy();
     this.unitList = new ArrayList<>();
     this.unitList.add(new UnitImpl(new Position(3,8),Player.RED,GameConstants.ARCHER));
     this.unitList.add(new UnitImpl(new Position(4,4),Player.BLUE,GameConstants.LEGION));
@@ -79,6 +80,7 @@ public class GameImpl implements Game {
   protected ageStrategy age;
   protected worldStrategy world;
   protected winningStrategy win;
+  protected workforcePopStrategy work;
   protected int game_age;
   protected Tile[][] tiles;
   protected List<Unit> unitList;
@@ -156,7 +158,7 @@ public class GameImpl implements Game {
         ((UnitImpl)unit).resetMove();
     }
   }
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
+  public void changeWorkForceFocusInCityAt( Position p, String balance ) {this.work.changeWorkforceFocusInCityAt(p,balance);}
   public void changeProductionInCityAt( Position p, String unitType ) {
     if (Objects.equals(unitType, GameConstants.LEGION) || Objects.equals(unitType, GameConstants.ARCHER) || Objects.equals(unitType, GameConstants.SETTLER))
       ((CityImpl)this.cities[p.getRow()][p.getColumn()]).setProduction_Unit(unitType);
