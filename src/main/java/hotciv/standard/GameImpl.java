@@ -35,10 +35,6 @@ public class GameImpl implements Game {
   public GameImpl(Factory gameFactory){
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
-    this.cities[8][12] = new CityImpl();
-    ((CityImpl)cities[8][12]).setCity_Owner(Player.RED);
-    cities[4][5] = new CityImpl();
-    ((CityImpl)cities[4][5]).setCity_Owner(Player.BLUE);
     this.current_Player = Player.RED;
     this.players = new Player[2];
     this.players[0] = Player.RED;
@@ -50,9 +46,7 @@ public class GameImpl implements Game {
     this.world = gameFactory.getWorldStrategy();
     this.work = gameFactory.getWorkforceStrategy();
     this.unitList = new ArrayList<>();
-    this.unitList.add(new UnitImpl(new Position(3,8),Player.RED,GameConstants.ARCHER));
-    this.unitList.add(new UnitImpl(new Position(4,4),Player.BLUE,GameConstants.LEGION));
-    this.unitList.add(new UnitImpl(new Position(5,5),Player.RED,GameConstants.SETTLER));
+    this.world.addWorldElements(this.cities,this.unitList);
     this.tiles = new TileImpl[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     generateWorld();
   }
@@ -165,7 +159,7 @@ public class GameImpl implements Game {
   }
   public void performUnitActionAt( Position p ) {
     Unit unit = getUnitAt(p);
-    this.action.actionStrategy(unit,this.unitList,this.cities);
+    this.action.actionStrategy(unit,this.unitList,this.cities,this.tiles);
   }
 
   public Player[] getPlayers() {

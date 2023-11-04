@@ -46,7 +46,7 @@ public class TestAlphaCiv {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new gameImplAlpha();
+    game = new GameImpl(new alphaFactory());
     city = new CityImpl();
     cityimpl = new CityImpl();
   }
@@ -135,7 +135,7 @@ public void checkTerrainTileLocations() {
   @Test
   public void checkGamePlayers(){
     assertThat(game , is(notNullValue()));
-    Player[] players = ((gameImplAlpha)game).getPlayers();
+    Player[] players = ((GameImpl)game).getPlayers();
     int i = players.length;
     assertThat(i,is(2));
     assertThat(players[0],is(Player.RED));

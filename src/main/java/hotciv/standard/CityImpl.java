@@ -11,9 +11,10 @@ public class CityImpl implements City {
         this.treasury = 0;
         this.production_Unit = GameConstants.LEGION;
         this.production_level = 6;
+        this.population = 1;
     }
     protected Player city_Owner;
-
+    protected int population;
     protected int treasury;
     protected String production_Unit;
     protected int production_level;
@@ -22,7 +23,7 @@ public class CityImpl implements City {
         return city_Owner;
     }
     public int getSize() {
-        return 1;
+        return this.population;
     }
 
     @Override
@@ -45,10 +46,15 @@ public class CityImpl implements City {
     public int getUnitCost(){
         if (Objects.equals(this.production_Unit, GameConstants.LEGION))
             return 15;
-        if (Objects.equals(this.production_Unit, GameConstants.ARCHER))
+        else if (Objects.equals(this.production_Unit, GameConstants.ARCHER))
             return 10;
-        else
+    else if (Objects.equals(this.production_Unit, GameConstants.SETTLER))
             return 30;
+        else
+            return 60;
 
+    }
+    public void decrementPopulation(){
+        this.population = this.population - 1;
     }
 }

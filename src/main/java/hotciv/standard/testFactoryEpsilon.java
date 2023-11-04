@@ -28,4 +28,8 @@ public class testFactoryEpsilon implements Factory {
             return new deltaCivWorldImpl();
         }
 
+    @Override
+    public workforcePopStrategy getWorkforceStrategy() {
+        return new alphaCivWorkStrategy();
+    }
 }

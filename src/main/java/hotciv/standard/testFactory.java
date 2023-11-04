@@ -25,4 +25,9 @@ public class testFactory implements Factory{
     public worldStrategy getWorldStrategy() {
         return new deltaCivWorldImpl();
     }
+
+    @Override
+    public workforcePopStrategy getWorkforceStrategy() {
+        return new alphaCivWorkStrategy();
+    }
 }

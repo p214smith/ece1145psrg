@@ -28,4 +28,8 @@ public class testFactoryZeta implements Factory {
             return new deltaCivWorldImpl();
         }
 
+    @Override
+    public workforcePopStrategy getWorkforceStrategy() {
+        return new alphaCivWorkStrategy();
+    }
 }
