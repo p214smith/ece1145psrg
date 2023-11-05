@@ -10,14 +10,14 @@ public class thetaCivActionStrategy implements actionStrategy {
         if(Objects.nonNull(unit)){
             if(Objects.equals(unit.getTypeString(),GameConstants.ARCHER)){
                 if(unit.getDefensiveStrength() == 3){
-                    ((UnitImpl)unit).decrementMove();
-                    ((UnitImpl)unit).setDefense(6);}
+                    ((ufoUnitImpl)unit).decrementMove();
+                    ((ufoUnitImpl)unit).setDefense(6);}
                 else{
-                    ((UnitImpl)unit).setDefense(3);
+                    ((ufoUnitImpl)unit).setDefense(3);
                 }
             }
             else if(Objects.equals(unit.getTypeString(),GameConstants.SETTLER)){
-                Position new_City_Position = ((UnitImpl)unit).getUnitPosition();
+                Position new_City_Position = ((ufoUnitImpl)unit).getUnitPosition();
                 cities[new_City_Position.getRow()][new_City_Position.getColumn()] = new CityImpl();
                 ((CityImpl)cities[new_City_Position.getRow()][new_City_Position.getColumn()]).setCity_Owner(unit.getOwner());
                 unitList.remove(unit);

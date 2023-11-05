@@ -1,5 +1,6 @@
 package hotciv.framework;
 
 public interface workforcePopStrategy {
-    public void changeWorkforceFocusInCityAt(Position p,String balance);
+    void changeWorkforceFocusInCityAt(Position p,String balance);
+    public void changeProductionInCityAt( Position p, String unitType ,City[][] cities);
 }
