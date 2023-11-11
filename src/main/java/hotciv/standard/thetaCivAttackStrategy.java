@@ -18,7 +18,10 @@ public class thetaCivAttackStrategy implements attackStrategy{
 
     @Override
     public boolean move_unit(Position from, Position to, Tile[][] tiles, List<Unit> unitList, City[][] cities,Player current_Player,winningStrategy win) {
-
+        if (to.getColumn() > GameConstants.WORLDSIZE-1 ) return false;
+        if (to.getRow() > GameConstants.WORLDSIZE-1 ) return false;
+        if (to.getColumn() < 0 ) return false;
+        if (to.getRow() < 0) return false;
         boolean proper_Move_Distance = Math.abs(from.getColumn() - to.getColumn())<= 1
                 && Math.abs(from.getRow() - to.getRow()) <= 1;
         if(!proper_Move_Distance) return false;

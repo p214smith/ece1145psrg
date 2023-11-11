@@ -19,6 +19,10 @@ public class alphaCivAttackStrategy implements attackStrategy{
 
     @Override
     public boolean move_unit(Position from, Position to, Tile[][] tiles, List<Unit> unitList, City[][] cities,Player current_Player,winningStrategy win) {
+        if (to.getColumn() > GameConstants.WORLDSIZE-1 ) return false;
+        if (to.getRow() > GameConstants.WORLDSIZE-1 ) return false;
+        if (to.getColumn() < 0 ) return false;
+        if (to.getRow() < 0) return false;
         if (Objects.equals(tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.MOUNTAINS))
             return false;
         if (Objects.equals(tiles[to.getRow()][to.getColumn()].getTypeString(), GameConstants.OCEANS))
