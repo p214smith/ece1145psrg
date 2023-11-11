@@ -201,4 +201,19 @@ public class systematicMoveUnitTest {
         Unit unit = game.getUnitAt(new Position(5,2));
         assertThat(unit.getMoveCount(), is(0));
     }
+    @Test
+    public void b14() {
+
+        assertTrue(game.moveUnit(new Position(4,3), new Position(5,2)));
+        Unit unit = game.getUnitAt(new Position(5,2));
+        assertThat(unit.getMoveCount(), is(0));
+        assertFalse(game.moveUnit(new Position(5,2), new Position(5,3)));
+    }
+    @Test
+    public void b15() {
+        Unit unit = game.getUnitAt(new Position(4,3));
+        assertThat(unit.getMoveCount(), is(1));
+        assertTrue(game.moveUnit(new Position(4,3), new Position(5,2)));
+        assertThat(unit.getMoveCount(), is(0));
+    }
 }
