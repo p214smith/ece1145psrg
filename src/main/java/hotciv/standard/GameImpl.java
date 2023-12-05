@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(Factory gameFactory) {
+  public GameImpl(FactoryImpl gameFactory) {
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.current_Player = Player.RED;
@@ -163,10 +163,13 @@ public class GameImpl implements Game {
     Unit unit = getUnitAt(p);
     this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
   }
+  public void addObserver(GameObserver observer) {}
+  public void setTileFocus(Position position) {}
 
   public Player[] getPlayers() {
     return players;
   }
+
 
   public void create_New_Unit(Position p, String unitType, int cost) {
     if (Objects.nonNull(this.cities[p.getRow()][p.getColumn()])) {

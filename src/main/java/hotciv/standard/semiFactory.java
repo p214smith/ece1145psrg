@@ -1,6 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
-public class semiFactory implements Factory{
+public class semiFactory implements FactoryImpl {
     public worldStrategy getWorldStrategy() {
         return new deltaCivWorldImpl();
     }

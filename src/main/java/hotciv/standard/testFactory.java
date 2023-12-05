@@ -1,6 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
-public class testFactory implements Factory{
+public class testFactory implements FactoryImpl {
     @Override
     public actionStrategy getActionStrategy() {
         return new gammaCivActionStrategy();

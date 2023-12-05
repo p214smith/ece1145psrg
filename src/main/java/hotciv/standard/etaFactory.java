@@ -2,7 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
-public class etaFactory implements Factory {
+public class etaFactory implements FactoryImpl {
     @Override
     public actionStrategy getActionStrategy() {
         return new alphaCivActionStrategy();

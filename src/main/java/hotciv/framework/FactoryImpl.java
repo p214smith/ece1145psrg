@@ -1,6 +1,6 @@
 package hotciv.framework;
 
-public interface Factory {
+public interface FactoryImpl {
     public actionStrategy getActionStrategy();
     public ageStrategy getAgeStrategy();
     public attackStrategy getAttackStrategy();
