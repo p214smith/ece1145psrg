@@ -10,7 +10,11 @@ public class thetaCivWorkStrategy implements workforcePopStrategy{
                 || Objects.equals(unitType, GameConstants.SETTLER) || Objects.equals(unitType, "ufo"))
             ((CityImpl)cities[p.getRow()][p.getColumn()]).setProduction_Unit(unitType);
     }
-    public void changeWorkforceFocusInCityAt(Position p, String balance) {
+    public void changeWorkforceFocusInCityAt(Position p, String balance,City c) {
 
     }
+    public void updatePopulation(City c){
+
+    }
+    public void update_Production_Food(City c, int[] values){((CityImpl)c).setProduction_level(6);}
 }

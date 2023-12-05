@@ -32,7 +32,7 @@ import java.util.*;
  */
 
 public class GameImpl implements Game {
-  public GameImpl(Factory gameFactory){
+  public GameImpl(Factory gameFactory) {
     this.game_age = -4000;
     this.cities = new City[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     this.current_Player = Player.RED;
@@ -46,15 +46,25 @@ public class GameImpl implements Game {
     this.world = gameFactory.getWorldStrategy();
     this.work = gameFactory.getWorkforceStrategy();
     this.unitList = new ArrayList<>();
-    this.world.addWorldElements(this.cities,this.unitList);
+    this.world.addWorldElements(this.cities, this.unitList);
     this.tiles = new TileImpl[GameConstants.WORLDSIZE][GameConstants.WORLDSIZE];
     generateWorld();
+    for(int i = 0; i < GameConstants.WORLDSIZE;i++){
+      for(int j = 0; j < GameConstants.WORLDSIZE;j++){
+        if (Objects.nonNull(getCityAt(new Position(i,j)))){
+          int[] t = getTilesAroundCity(new Position(i,j));
+          work.update_Production_Food(getCityAt(new Position(i,j)),t);
+        }
+      }
+    }
+
   }
+
   public void generateWorld() {
-    HashMap<Position, Tile> worldTerrain = new HashMap<Position,Tile>();
+
     String[] layout = this.world.getWorld();
-    for(int i = 0; i < GameConstants.WORLDSIZE; i++) {
-      for(int j = 0; j < GameConstants.WORLDSIZE; j++){
+    for (int i = 0; i < GameConstants.WORLDSIZE; i++) {
+      for (int j = 0; j < GameConstants.WORLDSIZE; j++) {
         char terrainType = layout[i].charAt(j);
         if (terrainType == 'p')
           this.tiles[i][j] = new TileImpl(GameConstants.PLAINS);
@@ -69,6 +79,7 @@ public class GameImpl implements Game {
       }
     }
   }
+
   protected attackStrategy attack;
   protected actionStrategy action;
   protected ageStrategy age;
@@ -81,57 +92,93 @@ public class GameImpl implements Game {
   protected Player[] players;
   protected Player current_Player;
   protected City[][] cities;
-  public Tile getTileAt( Position p ) { return this.tiles[p.getRow()][p.getColumn()]; }
-  public Unit getUnitAt( Position p ) {
-    return this.attack.getUnitAt(p,this.unitList);}
-  public City getCityAt( Position p ) { return this.cities[p.getRow()][p.getColumn()]; }
-  public Player getPlayerInTurn() { return this.current_Player; }
+
+  public Tile getTileAt(Position p) {
+    return this.tiles[p.getRow()][p.getColumn()];
+  }
+
+  public Unit getUnitAt(Position p) {
+    return this.attack.getUnitAt(p, this.unitList);
+  }
+
+  public City getCityAt(Position p) {
+    return this.cities[p.getRow()][p.getColumn()];
+  }
+
+  public Player getPlayerInTurn() {
+    return this.current_Player;
+  }
+
   public Player getWinner() {
 
-      return win.getWinner(this.game_age,this.cities);}
-  public int getAge() { return this.game_age; }
-  public boolean moveUnit( Position from, Position to ) {
-    return attack.move_unit(from,to,this.tiles,this.unitList,this.cities,this.current_Player,this.win);
+    return win.getWinner(this.game_age, this.cities);
   }
+
+  public int getAge() {
+    return this.game_age;
+  }
+
+  public boolean moveUnit(Position from, Position to) {
+    return attack.move_unit(from, to, this.tiles, this.unitList, this.cities, this.current_Player, this.win);
+  }
+
   public void endOfTurn() {
-    if(this.current_Player == Player.RED)
+    if (this.current_Player == Player.RED)
       this.current_Player = Player.BLUE;
-    else{
+    else {
       this.current_Player = Player.RED;
-      for(int i = 0; i < GameConstants.WORLDSIZE;i++){
-        for(int j = 0; j < GameConstants.WORLDSIZE;j++){
-          if(Objects.nonNull(cities[i][j])){
-            ((CityImpl)cities[i][j]).add_production();
-            create_New_Unit(new Position(i,j),cities[i][j].getProduction(),((CityImpl)cities[i][j]).getUnitCost());
+      for (int i = 0; i < GameConstants.WORLDSIZE; i++) {
+        for (int j = 0; j < GameConstants.WORLDSIZE; j++) {
+          if (Objects.nonNull(cities[i][j])) {
+            ((CityImpl) cities[i][j]).incrementFood_Balance();
+            ((CityImpl) cities[i][j]).add_production();
+            this.work.updatePopulation(getCityAt(new Position(i,j)));
+            this.work.update_Production_Food(getCityAt(new Position(i,j)),getTilesAroundCity(new Position(i,j)));
+            create_New_Unit(new Position(i, j), cities[i][j].getProduction(), ((CityImpl) cities[i][j]).getUnitCost());
           }
         }
       }
-    this.attack.end_of_turn(this.current_Player,this.unitList,this.cities,this.tiles);
-    ageWorld();
-    win.iterateRound();}
+      this.attack.end_of_turn(this.current_Player, this.unitList, this.cities, this.tiles);
+      ageWorld();
+      win.iterateRound();
+    }
   }
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {this.work.changeWorkforceFocusInCityAt(p,balance);}
-  public void changeProductionInCityAt( Position p, String unitType ) {
-    this.work.changeProductionInCityAt(p,unitType,this.cities);
+
+  public void changeWorkForceFocusInCityAt(Position p, String balance) {
+    if (Objects.nonNull(getCityAt(p))){
+      this.work.changeWorkforceFocusInCityAt(p, balance, getCityAt(p));
+      int [] t = getTilesAroundCity(p);
+      this.work.update_Production_Food(getCityAt(p),t);
+  }}
+
+  public void changeProductionInCityAt(Position p, String unitType) {
+    if (Objects.nonNull(getCityAt(p))){
+      if (getCityAt(p).getOwner() == this.current_Player) {
+          this.work.changeProductionInCityAt(p, unitType, this.cities);
+      }
+    }
   }
-  public void performUnitActionAt( Position p ) {
+
+  public void performUnitActionAt(Position p) {
     Unit unit = getUnitAt(p);
-    this.action.actionStrategy(unit,this.unitList,this.cities,this.tiles);
+    this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
   }
 
   public Player[] getPlayers() {
     return players;
   }
-  public void create_New_Unit(Position p,String unitType, int cost){
+
+  public void create_New_Unit(Position p, String unitType, int cost) {
     if (Objects.nonNull(this.cities[p.getRow()][p.getColumn()])) {
       if (this.cities[p.getRow()][p.getColumn()].getTreasury() >= cost) {
         Position newUnitPosition = FindPositionForNewUnit(p);
         if (Objects.nonNull(newUnitPosition)) {
-          this.attack.create_New_Unit(p,unitType,cost,this.unitList,cities,newUnitPosition);
+          this.attack.create_New_Unit(p, unitType, cost, this.unitList, cities, newUnitPosition);
         }
       }
     }
   }
+
   public Position FindPositionForNewUnit(Position P) {
     Position unitLocation = new Position(P.getRow(), P.getColumn());
     Position newLocation;
@@ -193,15 +240,45 @@ public class GameImpl implements Game {
   }
 
   public boolean isOccupied(Position unitLocation) {
-    return this.attack.isOccupied(unitLocation,this.unitList);
+    return this.attack.isOccupied(unitLocation, this.unitList);
   }
 
   private boolean isMountainOrOcean(Position location) {
     String tileType = this.tiles[location.getRow()][location.getColumn()].getTypeString();
     return Objects.equals(tileType, GameConstants.MOUNTAINS) || Objects.equals(tileType, GameConstants.OCEANS);
   }
-  public void ageWorld(){
+
+  public void ageWorld() {
     this.game_age = age.ageGame(this.game_age);
 
+  }
+
+  public int[] getTilesAroundCity(Position p) {
+    int[] tile_types = new int[5];
+    Position newLocation;
+    int plains = 0;
+    int oceans = 0;
+    int forest = 0;
+    int hills = 0;
+    int mountain = 0;
+    for (int i = 0; i < 8; i++) {
+      newLocation = getNextPosition(p, i);
+      if (Objects.equals(getTileAt(newLocation).getTypeString(), GameConstants.PLAINS))
+        plains += 1;
+      else if (Objects.equals(getTileAt(newLocation).getTypeString(), GameConstants.OCEANS))
+        oceans += 1;
+      else if (Objects.equals(getTileAt(newLocation).getTypeString(), GameConstants.FOREST))
+        forest += 1;
+      else if (Objects.equals(getTileAt(newLocation).getTypeString(), GameConstants.HILLS))
+        hills += 1;
+      else if (Objects.equals(getTileAt(newLocation).getTypeString(), GameConstants.MOUNTAINS))
+        mountain += 1;
+    }
+    tile_types[0] = plains;
+    tile_types[1] = oceans;
+    tile_types[2] = forest;
+    tile_types[3] = hills;
+    tile_types[4] = mountain;
+    return tile_types;
   }
 }

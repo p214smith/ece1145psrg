@@ -17,6 +17,6 @@ public class semiFactory implements Factory{
         return new gammaCivActionStrategy();
     }
     public workforcePopStrategy getWorkforceStrategy() {
-        return new alphaCivWorkStrategy();
+        return new etaCivWorkStrategy();
     }
 }
