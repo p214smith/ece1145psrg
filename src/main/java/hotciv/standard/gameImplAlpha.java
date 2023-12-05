@@ -290,4 +290,6 @@ public class gameImplAlpha implements Game {
         if (unitLocation == newLocation) return unitLocation;
         return null;
     }
+    public void addObserver(GameObserver observer) {}
+    public void setTileFocus(Position position) {}
 }

@@ -1,6 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
-public class thetaFactory implements Factory{
+public class thetaFactory implements FactoryImpl {
     public actionStrategy getActionStrategy() {
         return new thetaCivActionStrategy();
     }

@@ -4,8 +4,8 @@ import hotciv.framework.*;
 
 import java.util.*;
 public class logGameImpl implements Game {
-    public logGameImpl(Factory factory){
-        this.game = new GameImpl(factory);
+    public logGameImpl(FactoryImpl factoryImpl){
+        this.game = new GameImpl(factoryImpl);
         this.logging = true;
     }
     protected boolean logging;
@@ -83,4 +83,6 @@ public class logGameImpl implements Game {
     public void toggleLogging(){
         this.logging = !this.logging;
     }
+    public void addObserver(GameObserver observer) {}
+    public void setTileFocus(Position position) {}
 }
