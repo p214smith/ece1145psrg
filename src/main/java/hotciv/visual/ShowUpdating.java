@@ -83,6 +83,10 @@ class UpdateTool extends NullTool {
       game.setTileFocus(new Position(4,3));
       break;
     }
+      case 5:{
+        editor.showStatus("State Change: Inspect Cit at (3,3)");
+        game.setTileFocus(new Position(3,3));
+      }
       // TODO: Add more state changes for other things to test
     default: {
       editor.showStatus("No more changes in my list...");

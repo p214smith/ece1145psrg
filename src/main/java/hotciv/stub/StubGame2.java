@@ -41,7 +41,8 @@ public class StubGame2 implements Game {
   private Position pos_legion_blue;
   private Position pos_settler_red;
   private Position pos_ufo_red;
-
+  private City city;
+  private Position pos_city;
   private Unit red_archer;
 
   public Unit getUnitAt(Position p) {
@@ -66,6 +67,9 @@ public class StubGame2 implements Game {
     if ( from.equals(pos_archer_red) ) {
       pos_archer_red = to;
     }
+    boolean proper_Move_Distance = Math.abs(from.getColumn() - to.getColumn())<= 1
+            && Math.abs(from.getRow() - to.getRow()) <= 1;
+    if(!proper_Move_Distance) return false;
     // notify our observer(s) about the changes on the tiles
     gameObserver.worldChangedAt(from);
     gameObserver.worldChangedAt(to);
@@ -99,7 +103,8 @@ public class StubGame2 implements Game {
     pos_legion_blue = new Position( 3, 2);
     pos_settler_red = new Position( 4, 3);
     pos_ufo_red = new Position( 6, 4);
-
+    pos_city = new Position(3,3);
+    city = new CityStub();
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
 
@@ -126,7 +131,11 @@ public class StubGame2 implements Game {
   }
 
   // TODO: Add more stub behaviour to test MiniDraw updating
-  public City getCityAt( Position p ) { return null; }
+  public City getCityAt( Position p ) {
+    if (p.equals(pos_city))
+      return city;
+    else
+      return null; }
   public Player getWinner() { return null; }
   public int getAge() { return 0; }  
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
@@ -134,7 +143,7 @@ public class StubGame2 implements Game {
   public void performUnitActionAt( Position p ) {}  
 
   public void setTileFocus(Position position) {
-    // TODO: setTileFocus implementation pending.
+    gameObserver.tileFocusChangedAt(position);
     System.out.println("-- StubGame2 / setTileFocus called.");
     System.out.println(" *** IMPLEMENTATION PENDING ***");
   }
@@ -153,4 +162,27 @@ class StubUnit implements  Unit {
   public int getMoveCount() { return 1; }
   public int getDefensiveStrength() { return 0; }
   public int getAttackingStrength() { return 0; }
+}
+class CityStub implements City {
+  boolean redOwns = true;
+  // a testing method just to make some
+  // state changes
+  public void  makeAChange() {
+    redOwns = ! redOwns;
+  }
+  public Player getOwner() {
+    return (redOwns ? Player.RED : Player.BLUE);
+  }
+  public int getSize() {
+    return (redOwns ? 4 : 9);
+  }
+  public int getTreasury() {
+    return 0;
+  }
+  public String getProduction() {
+    return GameConstants.LEGION;
+  }
+  public String getWorkforceFocus() {
+    return GameConstants.foodFocus;
+  }
 }

@@ -1,5 +1,5 @@
 package hotciv.visual;
-
+import hotciv.standard.gameDrawing;
 import hotciv.framework.FactoryImpl;
 import hotciv.framework.Game;
 import hotciv.view.CivDrawing;
@@ -20,7 +20,7 @@ class HotCivFactory4 implements Factory {
   }
 
   public Drawing createDrawing( DrawingEditor editor ) {
-    return new CivDrawing( editor, game );
+    return new gameDrawing( editor, game );
   }
 
   public JTextField createStatusField( DrawingEditor editor ) {

@@ -92,6 +92,7 @@ public class GameImpl implements Game {
   protected Player[] players;
   protected Player current_Player;
   protected City[][] cities;
+  protected GameObserver observer;
 
   public Tile getTileAt(Position p) {
     return this.tiles[p.getRow()][p.getColumn()];
@@ -119,7 +120,12 @@ public class GameImpl implements Game {
   }
 
   public boolean moveUnit(Position from, Position to) {
-    return attack.move_unit(from, to, this.tiles, this.unitList, this.cities, this.current_Player, this.win);
+    boolean move =attack.move_unit(from, to, this.tiles, this.unitList, this.cities, this.current_Player, this.win);
+    if (move){
+      observer.worldChangedAt(from);
+      observer.worldChangedAt(to);
+    }
+    return move;
   }
 
   public void endOfTurn() {
@@ -141,6 +147,7 @@ public class GameImpl implements Game {
       this.attack.end_of_turn(this.current_Player, this.unitList, this.cities, this.tiles);
       ageWorld();
       win.iterateRound();
+      observer.turnEnds(this.current_Player,this.game_age);
     }
   }
 
@@ -163,8 +170,8 @@ public class GameImpl implements Game {
     Unit unit = getUnitAt(p);
     this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
   }
-  public void addObserver(GameObserver observer) {}
-  public void setTileFocus(Position position) {}
+  public void addObserver(GameObserver observer) {this.observer = observer;}
+  public void setTileFocus(Position position) {this.observer.tileFocusChangedAt(position);}
 
   public Player[] getPlayers() {
     return players;
