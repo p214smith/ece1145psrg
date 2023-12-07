@@ -152,11 +152,12 @@ public class GameImpl implements Game {
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
-    if (Objects.nonNull(getCityAt(p))){
+    if (Objects.nonNull(getCityAt(p)) && getCityAt(p).getOwner() == this.current_Player){
       this.work.changeWorkforceFocusInCityAt(p, balance, getCityAt(p));
       int [] t = getTilesAroundCity(p);
       this.work.update_Production_Food(getCityAt(p),t);
-  }}
+
+  }observer.worldChangedAt(p);}
 
   public void changeProductionInCityAt(Position p, String unitType) {
     if (Objects.nonNull(getCityAt(p))){
@@ -164,6 +165,7 @@ public class GameImpl implements Game {
           this.work.changeProductionInCityAt(p, unitType, this.cities);
       }
     }
+    observer.worldChangedAt(p);
   }
 
   public void performUnitActionAt(Position p) {

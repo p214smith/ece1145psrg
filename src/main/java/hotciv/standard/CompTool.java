@@ -25,6 +25,7 @@ public class CompTool extends SelectionTool{
     protected Game game;
     protected ActionTool action;
     protected EndOfTurnTool end;
+    protected ProductionTool prod;
     protected unitMoveTool move;
     protected setFocusTool focus;
     public CompTool(DrawingEditor editor,Game game) {
@@ -37,6 +38,7 @@ public class CompTool extends SelectionTool{
         this.end = new EndOfTurnTool(editor,game);
         this.move = new unitMoveTool(editor,game);
         this.focus = new setFocusTool(editor,game);
+        this.prod = new ProductionTool(editor,game);
         this.from = null;
     }
 
@@ -56,7 +58,7 @@ public class CompTool extends SelectionTool{
         int y_min = GfxConstants.MAP_OFFSET_Y;
         int y_max = y_min + GameConstants.WORLDSIZE * GfxConstants.TILESIZE;
         if(e_x > x_min && e_x < x_max && e_y > y_min && e_y < y_max ){
-            this.focus.mouseDown(e,x,y);
+
             this.from = p;
             if(e.isShiftDown())
                 this.action.mouseDown(e,x,y);
@@ -66,10 +68,15 @@ public class CompTool extends SelectionTool{
                 this.move.mouseDown(e, x, y);
                 this.fChild = this.move;}
             }
+            this.focus.mouseDown(e,x,y);
 
         }
-        else
+        else if (e_y < 200)
             this.end.mouseDown(e,x,y);
+        else{
+            this.prod.setPos(from);
+            this.prod.mouseDown(e,x,y);
+        }
     }
     public void mouseDrag(MouseEvent e, int x, int y) {
         fChild.mouseDrag(e, x, y);

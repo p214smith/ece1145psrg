@@ -4,6 +4,7 @@ import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /** Test stub for game for visual testing of
  * minidraw based graphics.
@@ -42,6 +43,8 @@ public class StubGame2 implements Game {
   private Position pos_settler_red;
   private Position pos_ufo_red;
   private City city;
+  private  String workforce;
+  private String production;
   private Position pos_city;
   private Unit red_archer;
   private Unit red_settler;
@@ -109,6 +112,8 @@ public class StubGame2 implements Game {
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
     red_settler = new StubUnit(GameConstants.SETTLER,Player.RED);
     inTurn = Player.RED;
+    production = "legion";
+    workforce = "apple";
   }
 
   // A simple implementation to draw the map of DeltaCiv
@@ -139,9 +144,23 @@ public class StubGame2 implements Game {
     else
       return null; }
   public Player getWinner() { return null; }
-  public int getAge() { return 0; }  
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
-  public void changeProductionInCityAt( Position p, String unitType ) {}
+  public int getAge() { return -4000; }
+  public void changeWorkForceFocusInCityAt( Position p, String balance ) {
+    if(Objects.equals(balance,GameConstants.foodFocus))
+      ((CityStub)city).setWorkforce(GameConstants.productionFocus);
+    else
+      ((CityStub)city).setWorkforce(GameConstants.foodFocus);
+    gameObserver.worldChangedAt(p);
+    }
+  public void changeProductionInCityAt( Position p, String unitType ) {
+    if(Objects.equals(unitType,GameConstants.LEGION))
+      ((CityStub)city).setProduction(GameConstants.ARCHER);
+    else if (Objects.equals(unitType,GameConstants.ARCHER))
+      ((CityStub)city).setProduction(GameConstants.SETTLER);
+    else
+      ((CityStub)city).setProduction(GameConstants.LEGION);
+    gameObserver.worldChangedAt(p);
+  }
   public void performUnitActionAt( Position p ) {
     if (p.hashCode() == pos_settler_red.hashCode()){
       red_settler = null;
@@ -152,7 +171,6 @@ public class StubGame2 implements Game {
   public void setTileFocus(Position position) {
     gameObserver.tileFocusChangedAt(position);
     System.out.println("-- StubGame2 / setTileFocus called.");
-    System.out.println(" *** IMPLEMENTATION PENDING ***");
   }
 
 }
@@ -171,6 +189,9 @@ class StubUnit implements  Unit {
   public int getAttackingStrength() { return 0; }
 }
 class CityStub implements City {
+  protected String workforce = GameConstants.productionFocus;
+  protected String production = GameConstants.ARCHER;
+
   boolean redOwns = true;
   // a testing method just to make some
   // state changes
@@ -187,9 +208,11 @@ class CityStub implements City {
     return 0;
   }
   public String getProduction() {
-    return GameConstants.LEGION;
+    return this.production;
   }
   public String getWorkforceFocus() {
-    return GameConstants.foodFocus;
+    return this.workforce;
   }
+  public void setWorkforce(String w){this.workforce = w;}
+  public void setProduction(String p){this.production =p;}
 }

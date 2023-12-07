@@ -163,6 +163,7 @@ public class gameDrawing implements Drawing,GameObserver{
                 new ImageFigure( playername + "shield",
                         new Point( GfxConstants.TURN_SHIELD_X,
                                 GfxConstants.TURN_SHIELD_Y ) );
+        delegate.remove(this.ageFigure);
         int age = game.getAge();
         String s;
         if (age < 0)
@@ -206,8 +207,13 @@ public class gameDrawing implements Drawing,GameObserver{
         System.out.println( "CivDrawing: world changes at "+pos);
         // this is a really brute-force algorithm: destroy
         // all known units and build up the entire set again
-        defineUnitMap();
+
         defineCityMap();
+        defineUnitMap();
+        City c = game.getCityAt(pos);
+        if (c != null){
+            this.workforceFigure.set(c.getWorkforceFocus(),new Point(GfxConstants.WORKFORCEFOCUS_X,GfxConstants.WORKFORCEFOCUS_Y));
+            this.produceFigure.set(c.getProduction(),new Point(GfxConstants.CITY_PRODUCTION_X,GfxConstants.CITY_PRODUCTION_Y));}
 
     }
 
@@ -219,7 +225,6 @@ public class gameDrawing implements Drawing,GameObserver{
         turnShieldIcon.set( playername+"shield",
                 new Point( GfxConstants.TURN_SHIELD_X,
                         GfxConstants.TURN_SHIELD_Y ) );
-        // TODO: Age output pending
         String s;
         if (age < 0)
             s = -age + " BC";
@@ -263,9 +268,10 @@ public class gameDrawing implements Drawing,GameObserver{
         // A request has been issued to repaint
         // everything. We simply rebuild the
         // entire Drawing.
-        defineUnitMap();
+
         defineIcons();
         defineCityMap();
+        defineUnitMap();
     }
 
     @Override
