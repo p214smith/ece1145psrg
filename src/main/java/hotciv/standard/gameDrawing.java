@@ -155,7 +155,13 @@ public class gameDrawing implements Drawing,GameObserver{
     protected ImageFigure turnShieldIcon;
     protected ImageFigure refreshFigure;
     protected void defineIcons() {
-        // TODO: Further development to include rest of figures needed
+        delegate.remove(this.turnShieldIcon);
+        delegate.remove(this.movesFigure);
+        delegate.remove(this.produceFigure);
+        delegate.remove(this.workforceFigure);
+        delegate.remove(this.cityShieldFigure);
+        delegate.remove(this.unitShieldFigure);
+        delegate.remove(this.refreshFigure);
         String playername = "red";
         if ( game.getPlayerInTurn() == Player.BLUE)
             playername = "blue";
@@ -218,7 +224,7 @@ public class gameDrawing implements Drawing,GameObserver{
     }
 
     public void turnEnds(Player nextPlayer, int age) {
-        // TODO: Remove system.out debugging output
+
         System.out.println( "CivDrawing: turnEnds at "+age+", next is "+nextPlayer );
         String playername = "red";
         if ( nextPlayer == Player.BLUE ) { playername = "blue"; }
@@ -231,6 +237,7 @@ public class gameDrawing implements Drawing,GameObserver{
         else
             s = age + " AD";
         this.ageFigure.setText(s);
+        requestUpdate();
     }
 
     public void tileFocusChangedAt(Position position) {

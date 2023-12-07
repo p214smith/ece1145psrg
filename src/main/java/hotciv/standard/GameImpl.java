@@ -129,8 +129,9 @@ public class GameImpl implements Game {
   }
 
   public void endOfTurn() {
-    if (this.current_Player == Player.RED)
+    if (this.current_Player == Player.RED){
       this.current_Player = Player.BLUE;
+      observer.turnEnds(this.current_Player,this.game_age);}
     else {
       this.current_Player = Player.RED;
       for (int i = 0; i < GameConstants.WORLDSIZE; i++) {
@@ -170,8 +171,9 @@ public class GameImpl implements Game {
 
   public void performUnitActionAt(Position p) {
     Unit unit = getUnitAt(p);
-    this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
-    observer.worldChangedAt(p);
+    if (unit.getOwner() == this.current_Player){
+      this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
+      observer.worldChangedAt(p);}
   }
   public void addObserver(GameObserver observer) {this.observer = observer;}
   public void setTileFocus(Position position) {this.observer.tileFocusChangedAt(position);}
