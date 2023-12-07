@@ -1,4 +1,5 @@
 package hotciv.standard;
+import hotciv.standard.*;
 import hotciv.framework.*;
 import hotciv.stub.StubGame1;
 import hotciv.view.CityFigure;
@@ -11,30 +12,31 @@ import minidraw.standard.handlers.DragTracker;
 import minidraw.standard.handlers.SelectAreaTracker;
 import minidraw.standard.handlers.StandardRubberBandSelectionStrategy;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Objects;
-public class EndOfTurnTool extends NullTool{
+public class ProductionTool extends NullTool{
     protected DrawingEditor editor;
     protected Game game;
-    public EndOfTurnTool(DrawingEditor editor,Game game){
-        this.editor = editor;
+    protected Position pos;
+    public ProductionTool(DrawingEditor editor, Game game){
+        this.pos = null;
         this.game = game;
-
+        this.editor = editor;
     }
 
     @Override
     public void mouseDown(MouseEvent e, int x, int y) {
-        Drawing model = editor.drawing();
-        model.lock();
-        Figure figure = model.findFigure(e.getX(),e.getY());
-        if (figure != null){
-            Rectangle rectangle = figure.displayBox();
-            if(rectangle.x == GfxConstants.TURN_SHIELD_X && rectangle.y == GfxConstants.TURN_SHIELD_Y){
-                editor.showStatus("End of turn called.");
-                game.endOfTurn();}
+        int x_min = GfxConstants.MAP_OFFSET_X;
+        int x_max = x_min + GameConstants.WORLDSIZE * GfxConstants.TILESIZE;
+        if (e.getX() > x_max){
+            Drawing model = editor.drawing();
+            model.lock();
+            Figure figure = model.findFigure(e.getX(),e.getY());
+            if (figure != null) {
+                Rectangle rectangle = figure.displayBox();
+            }
         }
-        model.unlock();
     }
+
+    public void setPos(Position p){this.pos = p;}
 }

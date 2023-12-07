@@ -44,13 +44,13 @@ public class StubGame2 implements Game {
   private City city;
   private Position pos_city;
   private Unit red_archer;
-
+  private Unit red_settler;
   public Unit getUnitAt(Position p) {
     if ( p.equals(pos_archer_red) ) {
       return red_archer;
     }
     if ( p.equals(pos_settler_red) ) {
-      return new StubUnit( GameConstants.SETTLER, Player.RED );
+      return red_settler;
     }
     if ( p.equals(pos_legion_blue) ) {
       return new StubUnit( GameConstants.LEGION, Player.BLUE );
@@ -107,7 +107,7 @@ public class StubGame2 implements Game {
     city = new CityStub();
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
-
+    red_settler = new StubUnit(GameConstants.SETTLER,Player.RED);
     inTurn = Player.RED;
   }
 
@@ -134,13 +134,20 @@ public class StubGame2 implements Game {
   public City getCityAt( Position p ) {
     if (p.equals(pos_city))
       return city;
+    else if (p.equals(pos_settler_red) && red_settler == null)
+      return city;
     else
       return null; }
   public Player getWinner() { return null; }
   public int getAge() { return 0; }  
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
-  public void performUnitActionAt( Position p ) {}  
+  public void performUnitActionAt( Position p ) {
+    if (p.hashCode() == pos_settler_red.hashCode()){
+      red_settler = null;
+      gameObserver.worldChangedAt(p);
+    }
+  }
 
   public void setTileFocus(Position position) {
     gameObserver.tileFocusChangedAt(position);

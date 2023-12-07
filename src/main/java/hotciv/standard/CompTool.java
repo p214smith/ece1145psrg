@@ -1,4 +1,5 @@
 package hotciv.standard;
+import hotciv.standard.*;
 import hotciv.framework.*;
 import hotciv.stub.StubGame1;
 import hotciv.view.CityFigure;
@@ -11,12 +12,10 @@ import minidraw.standard.handlers.DragTracker;
 import minidraw.standard.handlers.SelectAreaTracker;
 import minidraw.standard.handlers.StandardRubberBandSelectionStrategy;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Objects;
 
-public class unitMoveTool extends AbstractTool implements Tool{
+public class CompTool extends SelectionTool{
     protected Unit unit;
     protected Tool fChild;
     protected Tool cachedNullTool;
@@ -24,53 +23,69 @@ public class unitMoveTool extends AbstractTool implements Tool{
     protected Figure draggedFigure;
     protected RubberBandSelectionStrategy selectionStrategy;
     protected Game game;
-
-    public unitMoveTool(DrawingEditor editor,Game game){
+    protected ActionTool action;
+    protected EndOfTurnTool end;
+    protected unitMoveTool move;
+    protected setFocusTool focus;
+    public CompTool(DrawingEditor editor,Game game) {
         super(editor);
         fChild = cachedNullTool = new NullTool();
         draggedFigure = null;
         this.selectionStrategy = new StandardRubberBandSelectionStrategy();
         this.game = game;
+        this.action = new ActionTool(editor,game);
+        this.end = new EndOfTurnTool(editor,game);
+        this.move = new unitMoveTool(editor,game);
+        this.focus = new setFocusTool(editor,game);
+        this.from = null;
     }
-    public void mouseDown(MouseEvent e, int x, int y){
+
+    @Override
+    public void mouseDown(MouseEvent e, int x, int y) {
         Drawing model = editor().drawing();
-
+        Position p = GfxConstants.getPositionFromXY(e.getX(),e.getY());
         model.lock();
-
         draggedFigure = model.findFigure(e.getX(), e.getY());
         Unit unit = new UnitImpl(new Position(1,1),Player.RED,"legion");
         UnitFigure f = new UnitFigure("legion",new Point(),unit);
-        if (draggedFigure.getClass() == f.getClass()){
-            this.from = GfxConstants.getPositionFromXY(e.getX(),e.getY());
-            fChild = createDragTracker(draggedFigure);
+
+        int e_x = e.getX();
+        int e_y = e.getY();
+        int x_min = GfxConstants.MAP_OFFSET_X;
+        int x_max = x_min + GameConstants.WORLDSIZE * GfxConstants.TILESIZE;
+        int y_min = GfxConstants.MAP_OFFSET_Y;
+        int y_max = y_min + GameConstants.WORLDSIZE * GfxConstants.TILESIZE;
+        if(e_x > x_min && e_x < x_max && e_y > y_min && e_y < y_max ){
+            this.focus.mouseDown(e,x,y);
+            this.from = p;
+            if(e.isShiftDown())
+                this.action.mouseDown(e,x,y);
+
+            else if (draggedFigure != null ) {
+                if(draggedFigure.getClass() == f.getClass()){
+                this.move.mouseDown(e, x, y);
+                this.fChild = this.move;}
+            }
+
         }
-         else {
-        if (!e.isShiftDown()) {
-            model.clearSelection();
-        }
-        fChild = createAreaTracker();
-    }
+        else
+            this.end.mouseDown(e,x,y);
     }
     public void mouseDrag(MouseEvent e, int x, int y) {
         fChild.mouseDrag(e, x, y);
     }
-
-    @Override
     public void mouseMove(MouseEvent e, int x, int y) {
         fChild.mouseMove(e, x, y);
     }
     public void mouseUp(MouseEvent e, int x, int y) {
-        editor().drawing().unlock();
-        Position to = GfxConstants.getPositionFromXY(e.getX(),e.getY());
-        game.moveUnit(this.from,to);
-
+        fChild.mouseUp(e,x,y);
         fChild = cachedNullTool;
+        editor().drawing().unlock();
         draggedFigure = null;
     }
     protected Tool createDragTracker(Figure f) {
         return new DragTracker(editor(), f);
     }
     protected Tool createAreaTracker() {
-        return new SelectAreaTracker(editor(), selectionStrategy);
-    }
+        return new SelectAreaTracker(editor(), selectionStrategy);}
 }

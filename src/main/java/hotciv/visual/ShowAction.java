@@ -1,5 +1,5 @@
 package hotciv.visual;
-
+import hotciv.standard.ActionTool;
 import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
 import minidraw.framework.*;
@@ -33,6 +33,6 @@ public class ShowAction {
     editor.showStatus("Shift-Click on unit to see Game's performAction method being called.");
 
     // TODO: Replace the setting of the tool with your ActionTool implementation.
-    editor.setTool( new NullTool() );
+    editor.setTool( new ActionTool(editor,game) );
   }
 }

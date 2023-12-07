@@ -169,6 +169,7 @@ public class GameImpl implements Game {
   public void performUnitActionAt(Position p) {
     Unit unit = getUnitAt(p);
     this.action.actionStrategy(unit, this.unitList, this.cities, this.tiles);
+    observer.worldChangedAt(p);
   }
   public void addObserver(GameObserver observer) {this.observer = observer;}
   public void setTileFocus(Position position) {this.observer.tileFocusChangedAt(position);}
