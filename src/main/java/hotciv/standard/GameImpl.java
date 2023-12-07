@@ -121,10 +121,7 @@ public class GameImpl implements Game {
 
   public boolean moveUnit(Position from, Position to) {
     boolean move =attack.move_unit(from, to, this.tiles, this.unitList, this.cities, this.current_Player, this.win);
-    if (move){
-      observer.worldChangedAt(from);
-      observer.worldChangedAt(to);
-    }
+    observer.worldChangedAt(to);
     return move;
   }
 

@@ -267,7 +267,6 @@ public class gameDrawing implements Drawing,GameObserver{
             this.unitShieldFigure.set(GfxConstants.NOTHING,new Point(GfxConstants.UNIT_SHIELD_X,GfxConstants.UNIT_SHIELD_Y));
             this.movesFigure.setText("");
         }
-        System.out.println( "Fake it: tileFocusChangedAt "+position );
     }
 
     @Override

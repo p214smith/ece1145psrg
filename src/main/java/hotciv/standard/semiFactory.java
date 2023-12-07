@@ -4,8 +4,7 @@ public class semiFactory implements FactoryImpl {
     public worldStrategy getWorldStrategy() {
         return new deltaCivWorldImpl();
     }
-    public winningStrategy getWinningStrategy() {
-        return new epsilonCivWinningStrategy();
+    public winningStrategy getWinningStrategy() {return new epsilonCivWinningStrategy();
     }
     public attackStrategy getAttackStrategy() {
         return new epsilonCivAttackStrategy();

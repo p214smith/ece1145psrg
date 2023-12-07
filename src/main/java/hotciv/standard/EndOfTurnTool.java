@@ -33,7 +33,14 @@ public class EndOfTurnTool extends NullTool{
             Rectangle rectangle = figure.displayBox();
             if(rectangle.x == GfxConstants.TURN_SHIELD_X && rectangle.y == GfxConstants.TURN_SHIELD_Y){
                 editor.showStatus("End of turn called.");
-                game.endOfTurn();}
+                game.endOfTurn();
+                Player p = game.getWinner();
+                if (p != null) {
+                    if (Objects.equals(p,Player.RED))
+                        editor.showStatus("Red Player Wins!!!");
+                    else
+                        editor.showStatus("Blue Player Wins!!!");
+                }}
         }
         model.unlock();
     }
