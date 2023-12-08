@@ -58,7 +58,6 @@ public class CompTool extends SelectionTool{
         int y_min = GfxConstants.MAP_OFFSET_Y;
         int y_max = y_min + GameConstants.WORLDSIZE * GfxConstants.TILESIZE;
         if(e_x > x_min && e_x < x_max && e_y > y_min && e_y < y_max ){
-
             this.from = p;
             if(e.isShiftDown())
                 this.action.mouseDown(e,x,y);
@@ -68,7 +67,8 @@ public class CompTool extends SelectionTool{
                 this.move.mouseDown(e, x, y);
                 this.fChild = this.move;}
             }
-            this.focus.mouseDown(e,x,y);
+            if (e.isAltDown())
+                this.focus.mouseDown(e,x,y);
 
         }
         else if (e_y < 200)
